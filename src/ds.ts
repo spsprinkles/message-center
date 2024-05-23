@@ -82,7 +82,7 @@ export class DataSource {
                 onInitError: reject,
                 onInitialized: () => {
                     // Load the filters
-                    //this.loadFilters();
+                    this.loadFilters();
 
                     // Resolve the request
                     resolve();
@@ -91,31 +91,75 @@ export class DataSource {
         });
     }
 
-    /*
-    // Status Filters
-    private static _statusFilters: Components.ICheckboxGroupItem[] = null;
-    static get StatusFilters(): Components.ICheckboxGroupItem[] { return this._statusFilters; }
-    static loadStatusFilters() {
-        // Get the status field choices
-        let field = this.List.getField("ServiceStatus") as Types.SP.FieldChoice;
-        if (field) {
-            let items: Components.ICheckboxGroupItem[] = [];
+    // Filters
+    private static _filters: { [key: string]: Components.ICheckboxGroupItem[] } = null;
+    static get CategoryFilters(): Components.ICheckboxGroupItem[] { return this._filters.category; }
+    static get SeverityFilters(): Components.ICheckboxGroupItem[] { return this._filters.severity; }
+    static get ServicesFilters(): Components.ICheckboxGroupItem[] { return this._filters.services; }
+    static get TagsFilters(): Components.ICheckboxGroupItem[] { return this._filters.tags; }
+    static loadFilters() {
+        let filters = {
+            category: {},
+            services: {},
+            severity: {},
+            tags: {}
+        }
 
-            // Parse the choices
-            for (let i = 0; i < field.Choices.results.length; i++) {
-                // Add an item
-                items.push({
-                    data: field.Choices.results[i],
-                    label: getStatusTitle(field.Choices.results[i]),
+        // Clear the filters
+        this._filters = {
+            category: [],
+            services: [],
+            severity: [],
+            tags: []
+        }
+
+        // Parse the items
+        for (let i = 0; i < this.List.Items.length; i++) {
+            let item = this.List.Items[i];
+
+            // Set the filter values
+            item.Category ? filters.category[item.Category] = true : null;
+            item.Severity ? filters.severity[item.Severity] = true : null;
+
+            // Parse the services
+            let services = item.Services.results;
+            for (let i = 0; i < services.length; i++) {
+                filters.services[services[i]] = true;
+            }
+
+            // Parse the tags
+            let tags = item.Tags.results;
+            for (let i = 0; i < tags.length; i++) {
+                filters.tags[tags[i]] = true;
+            }
+        }
+
+        // Set the filters
+        let setFilters = (key: string) => {
+            // Parse the filter values
+            for (let filterValue in filters[key]) {
+                // Add the filter value
+                this._filters[key].push({
+                    data: filterValue,
+                    label: filterValue,
                     type: Components.CheckboxGroupTypes.Switch
                 });
             }
 
-            // Set the filters and resolve the promise
-            this._statusFilters = items;
+            // Sorty the filters
+            this._filters[key] = this._filters[key].sort((a, b) => {
+                if (a.label < b.label) { return -1; }
+                if (a.label > b.label) { return 1; }
+                return 0;
+            });
         }
+
+        // Set the filters
+        setFilters("category");
+        setFilters("services");
+        setFilters("severity");
+        setFilters("tags");
     }
-    */
 
     // Refreshes the list data
     static refresh(): PromiseLike<IListItem[]> {

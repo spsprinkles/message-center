@@ -20,18 +20,46 @@ export class App {
             el,
             hideHeader: true,
             useModal: true,
-            /*
             filters: {
-                items: [{
-                    header: "By Status",
-                    items: DataSource.StatusFilters,
-                    onFilter: (value: string) => {
-                        // Filter the table
-                        dashboard.filter(2, value);
+                items: [
+                    {
+                        header: "By Category",
+                        items: DataSource.CategoryFilters,
+                        multi: true,
+                        onFilter: (values: string[]) => {
+                            // Filter the tiles
+                            dashboard.filterTiles(values);
+                        }
+                    },
+                    {
+                        header: "By Services",
+                        items: DataSource.ServicesFilters,
+                        multi: true,
+                        onFilter: (values: string[]) => {
+                            // Filter the tiles
+                            dashboard.filterTiles(values);
+                        }
+                    },
+                    {
+                        header: "By Severity",
+                        items: DataSource.SeverityFilters,
+                        multi: true,
+                        onFilter: (values: string[]) => {
+                            // Filter the tiles
+                            dashboard.filterTiles(values);
+                        }
+                    },
+                    {
+                        header: "By Tags",
+                        items: DataSource.TagsFilters,
+                        multi: true,
+                        onFilter: (values: string[]) => {
+                            // Filter the tiles
+                            dashboard.filterTiles(values);
+                        }
                     }
-                }]
+                ]
             },
-            */
             navigation: {
                 title: Strings.ProjectName
             },
@@ -45,7 +73,9 @@ export class App {
             tiles: {
                 items: DataSource.List.Items,
                 colSize: 3,
+                paginationLimit: 9,
                 showFooter: false,
+                filterFields: ["Category", "Services", "Severity", "Tags"],
                 titleFields: ["MessageId"],
                 subTitleFields: ["Title"],
                 bodyFields: ["Summary"],
@@ -54,7 +84,7 @@ export class App {
 
                     // Render the icons
                     this.renderIcons(el, item);
-                },
+                }
             }
         });
     }
