@@ -1,4 +1,4 @@
-import { Dashboard } from "dattatable";
+import { CanvasForm, Dashboard } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
 import { DataSource, IListItem } from "./ds";
 import Strings from "./strings";
@@ -74,19 +74,121 @@ export class App {
                 items: DataSource.List.Items,
                 colSize: 3,
                 paginationLimit: 9,
-                showFooter: false,
                 filterFields: ["Category", "Services", "Severity", "Tags"],
-                titleFields: ["MessageId"],
+                titleFields: ["MessageId", "RoadMapId"],
+                titleTemplate: `
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span>{MessageId}</span>
+                        <span>{RoadMapId}</span>
+                    </div>
+                `,
+                onTitleRendered: (el) => {
+                    // Update the class names
+                    el.classList.remove("h5");
+                    el.classList.add("fs-6");
+                },
                 subTitleFields: ["Title"],
+                onSubTitleRendered: (el) => {
+                    // Add spacing
+                    el.classList.add("mt-1");
+                    el.classList.add("mb-1");
+                },
                 bodyFields: ["Summary"],
+                onBodyRendered: (el) => {
+                    // Update the padding for the top
+                    el.classList.add("pt-1");
+                },
                 onHeaderRendered: (el, item: IListItem) => {
-                    el.classList.add("text-center");
+                    // Add the classes
+                    el.classList.add("d-flex");
+                    el.classList.add("justify-content-between");
+                    el.classList.add("align-items-center");
+
+                    // Render the header template
+                    el.innerHTML = `
+                        <span class="h6 m-0">Message ID</span>
+                        <span class="card-icons"></span>
+                        <span class="h6 m-0">Road Map ID</span>
+                    `;
 
                     // Render the icons
-                    this.renderIcons(el, item);
+                    this.renderIcons(el.querySelector(".card-icons"), item);
+                },
+                onFooterRendered: (el, item) => {
+                    // Center the button
+                    el.classList.add("text-center");
+
+                    // Render the details button
+                    this.renderDetailsButton(el, item);
+                },
+                onColumnRendered: (el) => {
+                    // Add spacing for the top of the card
+                    el.classList.add("mt-2");
+                },
+                onCardRendered: (el) => {
+                    // Add the class names for making the heights match
+                    el.classList.add("h-100");
                 }
             }
         });
+    }
+
+    // Renders the details button
+    private renderDetailsButton(el: HTMLElement, item: IListItem) {
+        // Ensure content exists
+        if (item.Content) {
+            // Add a button for additional details
+            Components.Tooltip({
+                el,
+                content: "Click to view additional details for this item.",
+                btnProps: {
+                    text: "Details",
+                    type: Components.ButtonTypes.OutlineSuccess,
+                    isSmall: true,
+                    onClick: () => {
+                        // Clear the canvas
+                        CanvasForm.clear();
+
+                        // Set the properties
+                        CanvasForm.setSize(Components.OffcanvasSize.Medium3);
+                        CanvasForm.setType(Components.OffcanvasTypes.End);
+
+                        // Set the header
+                        CanvasForm.setHeader(item.MessageId);
+
+                        // Make the headers bold
+                        let content = item.Content
+                            .replace(/\[/g, "<b>").replace(/\]/g, "</b>");
+
+                        // Render the body
+                        CanvasForm.BodyElement.innerHTML = `
+                            <div class="row">
+                                <div class="col-9">${content}</div>
+                                <div class="col-3">
+                                    <div>Relevance</div>
+                                    <div class="mb-3"></div>
+                                    <div>Service & Monthly Active Users</div>
+                                    <div class="mb-3"></div>
+                                    <div>Platform</div>
+                                    <div class="mb-3"></div>
+                                    <div>Message ID</div>
+                                    <div class="mb-3"></div>
+                                    <div>Roadmap ID</div>
+                                    <div class="mb-3"></div>
+                                    <div>Published</div>
+                                    <div class="mb-3"></div>
+                                    <div>Tag(s)</div>
+                                    <div class="mb-3"></div>
+                                </div>
+                            </div>
+                        `;
+
+                        // Show the form
+                        CanvasForm.show();
+                    }
+                }
+            });
+        }
     }
 
     // Renders the icons for the item

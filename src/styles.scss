@@ -1,1 +1,9 @@
 /** Custom Styles Go Here */
+.bs {
+    /** Add a border under the title */
+    .card-title {
+        border-bottom: 1px solid var(--sp-neutral-quaternary, #d2d0ce);
+        padding-bottom: .25rem;
+        -webkit-line-clamp: 1;
+    }
+}
