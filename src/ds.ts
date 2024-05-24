@@ -12,6 +12,7 @@ export interface IListItem extends Types.SP.ListItem {
     Message: string;
     MessageId: string;
     Platform: string;
+    PublishedDate: string;
     RoadMapId: string;
     Services: { results: string[]; }
     Severity: string;

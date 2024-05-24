@@ -27,6 +27,11 @@ export const Configuration = Helper.SPConfig({
                     unlimited: true
                 } as Helper.IFieldInfoNote,
                 {
+                    name: "PublishedDate",
+                    title: "Published Date",
+                    type: Helper.SPCfgFieldType.Text
+                },
+                {
                     name: "Message",
                     title: "Message",
                     type: Helper.SPCfgFieldType.Note,

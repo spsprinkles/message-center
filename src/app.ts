@@ -154,34 +154,70 @@ export class App {
                         CanvasForm.setType(Components.OffcanvasTypes.End);
 
                         // Set the header
-                        CanvasForm.setHeader(item.MessageId);
+                        CanvasForm.setHeader(item.Title);
 
                         // Make the headers bold
                         let content = item.Content
                             .replace(/\[/g, "<b>").replace(/\]/g, "</b>");
 
+                        // Parse the tags
+                        let badges = [];
+                        for (let i = 0; i < item.Tags.results.length; i++) {
+                            badges.push(Components.Badge({
+                                className: "text-bg-secondary",
+                                content: item.Tags.results[i]
+                            }).el.outerHTML);
+                        }
+
+                        // Get the icons
+                        let el = document.createElement("div");
+                        this.renderIcons(el, item);
+
+                        // Create the summary
+                        let summary = Components.Alert({
+                            header: "Summary",
+                            content: item.Summary,
+                            type: Components.AlertTypes.Secondary
+                        });
+
                         // Render the body
                         CanvasForm.BodyElement.innerHTML = `
                             <div class="row">
-                                <div class="col-9">${content}</div>
+                                <div class="col-9">
+                                    ${summary.el.outerHTML}
+                                    ${content}
+                                </div>
                                 <div class="col-3">
-                                    <div>Relevance</div>
+                                    <div class="fs-6">Relevance:</div>
                                     <div class="mb-3"></div>
-                                    <div>Service & Monthly Active Users</div>
-                                    <div class="mb-3"></div>
-                                    <div>Platform</div>
-                                    <div class="mb-3"></div>
-                                    <div>Message ID</div>
-                                    <div class="mb-3"></div>
-                                    <div>Roadmap ID</div>
-                                    <div class="mb-3"></div>
-                                    <div>Published</div>
-                                    <div class="mb-3"></div>
-                                    <div>Tag(s)</div>
-                                    <div class="mb-3"></div>
+                                    <div class="fs-6">Service:</div>
+                                    <div class="mb-3">${el.innerHTML}</div>
+                                    <div class="fs-6">Platform:</div>
+                                    <div class="mb-3">${item.Platform}</div>
+                                    <div class="fs-6">Message ID:</div>
+                                    <div class="mb-3 fw-semibold">${item.MessageId}</div>
+                                    <div class="fs-6">Roadmap ID:</div>
+                                    <div class="mb-3"><a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${item.RoadMapId}">${item.RoadMapId || ""}</a></div>
+                                    <div class="fs-6">Published:</div>
+                                    <div class="mb-3">${item.PublishedDate || ""}</div>
+                                    <div class="fs-6">Tag(s):</div>
+                                    <div class="mb-3">${badges.join('\n')}</div>
                                 </div>
                             </div>
+                            <div class="footer d-flex justify-content-end">
+                            </div>
                         `;
+
+                        // Render the close button
+                        Components.Button({
+                            el: CanvasForm.BodyElement.querySelector(".footer"),
+                            text: "Close",
+                            type: Components.ButtonTypes.OutlineSuccess,
+                            onClick: () => {
+                                // Close the canvas
+                                CanvasForm.hide();
+                            }
+                        });
 
                         // Show the form
                         CanvasForm.show();
