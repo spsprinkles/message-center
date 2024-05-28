@@ -27,9 +27,10 @@ export const Configuration = Helper.SPConfig({
                     unlimited: true
                 } as Helper.IFieldInfoNote,
                 {
-                    name: "PublishedDate",
-                    title: "Published Date",
-                    type: Helper.SPCfgFieldType.Text
+                    name: "IsMajorChange",
+                    title: "Is Major Change",
+                    type: Helper.SPCfgFieldType.Boolean,
+                    defaultValue: "0"
                 },
                 {
                     name: "Message",
@@ -46,6 +47,11 @@ export const Configuration = Helper.SPConfig({
                 {
                     name: "Platform",
                     title: "Platform",
+                    type: Helper.SPCfgFieldType.Text
+                },
+                {
+                    name: "PublishedDate",
+                    title: "Published Date",
                     type: Helper.SPCfgFieldType.Text
                 },
                 {

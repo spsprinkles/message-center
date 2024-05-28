@@ -1,5 +1,7 @@
 import { CanvasForm, Dashboard } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
+import { squareFill } from "gd-sprest-bs/build/icons/svgs/squareFill";
+import { square } from "gd-sprest-bs/build/icons/svgs/square";
 import { DataSource, IListItem } from "./ds";
 import Strings from "./strings";
 
@@ -180,6 +182,66 @@ export class App {
                             type: Components.AlertTypes.Secondary
                         });
 
+                        // Render the relevance
+                        let elRelevance = document.createElement("div");
+                        let numbOfIcons = 1;
+                        switch (item.Severity) {
+                            case "normal":
+                                numbOfIcons = 1;
+                                break;
+                            case "high":
+                                numbOfIcons = 2;
+                                break;
+                            case "critical":
+                                numbOfIcons = 3;
+                                break;
+                        }
+
+                        // See if this is a major change, and increment the icons
+                        if (item.IsMajorChange) { numbOfIcons++; }
+
+                        // Set the relevance
+                        let relevance = "";
+                        switch (numbOfIcons) {
+                            case 5:
+                                relevance = "Urgent";
+                                break;
+                            case 4:
+                                relevance = "Critical";
+                                break;
+                            case 3:
+                                relevance = "High";
+                                break;
+                            case 2:
+                                relevance = "Medium";
+                                break;
+                            default:
+                                relevance = "Normal";
+                                break;
+                        }
+
+                        // Render the icons
+                        for (let i = 0; i < numbOfIcons; i++) {
+                            // Create the icon
+                            let icon = squareFill(8, 8) as HTMLElement;
+                            icon.style.height = "10";
+                            icon.style.width = "10";
+                            icon.classList.add("me-1")
+
+                            // Add the icon
+                            elRelevance.appendChild(icon);
+                        }
+                        for (let i = 3; i > numbOfIcons; i--) {
+                            // Create the icon
+                            let icon = square(8, 8) as HTMLElement;
+                            icon.style.height = "10";
+                            icon.style.width = "10";
+                            icon.classList.add("me-1")
+
+                            // Add the icon
+                            elRelevance.appendChild(icon);
+                        }
+
                         // Render the body
                         CanvasForm.BodyElement.innerHTML = `
                             <div class="row">
@@ -189,7 +251,7 @@ export class App {
                                 </div>
                                 <div class="col-3">
                                     <div class="fs-6">Relevance:</div>
-                                    <div class="mb-3"></div>
+                                    <div class="mb-3">${elRelevance.innerHTML}<span class="ms-3 text-capitalize">${relevance}</span></div>
                                     <div class="fs-6">Service:</div>
                                     <div class="mb-3">${el.innerHTML}</div>
                                     <div class="fs-6">Platform:</div>
@@ -212,7 +274,7 @@ export class App {
                         Components.Button({
                             el: CanvasForm.BodyElement.querySelector(".footer"),
                             text: "Close",
-                            type: Components.ButtonTypes.OutlineSuccess,
+                            type: Components.ButtonTypes.OutlineSecondary,
                             onClick: () => {
                                 // Close the canvas
                                 CanvasForm.hide();

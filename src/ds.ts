@@ -9,6 +9,7 @@ import Strings from "./strings";
 export interface IListItem extends Types.SP.ListItem {
     Category: string;
     Content: string;
+    IsMajorChange: boolean;
     Message: string;
     MessageId: string;
     Platform: string;
@@ -77,7 +78,7 @@ export class DataSource {
                 webUrl: Strings.SourceUrl,
                 itemQuery: {
                     GetAllItems: true,
-                    OrderBy: ["MessageId"],
+                    OrderBy: ["MessageId desc"],
                     Top: 5000
                 },
                 onInitError: reject,
