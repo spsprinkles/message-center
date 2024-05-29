@@ -1,0 +1,40 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
+  "solution": {
+    "name": "message-center-client-side-solution",
+    "id": "22c60fcb-b8cd-4e9e-98bf-f2e15bd4acfc",
+    "version": "1.0.0.0",
+    "includeClientSideAssets": true,
+    "skipFeatureDeployment": true,
+    "isDomainIsolated": false,
+    "developer": {
+      "name": "",
+      "websiteUrl": "",
+      "privacyUrl": "",
+      "termsOfUseUrl": "",
+      "mpnId": "Undefined-1.18.2"
+    },
+    "metadata": {
+      "shortDescription": {
+        "default": "message-center description"
+      },
+      "longDescription": {
+        "default": "message-center description"
+      },
+      "screenshotPaths": [],
+      "videoUrl": "",
+      "categories": []
+    },
+    "features": [
+      {
+        "title": "message-center Feature",
+        "description": "The feature that activates elements of the message-center solution.",
+        "id": "e6c56c7b-75f2-4478-8a2d-a511c9e1b5e7",
+        "version": "1.0.0.0"
+      }
+    ]
+  },
+  "paths": {
+    "zippedPackage": "solution/message-center.sppkg"
+  }
+}

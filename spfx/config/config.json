@@ -1,0 +1,18 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/config.2.0.schema.json",
+  "version": "2.0",
+  "bundles": {
+    "message-center-web-part": {
+      "components": [
+        {
+          "entrypoint": "./lib/webparts/messageCenter/MessageCenterWebPart.js",
+          "manifest": "./src/webparts/messageCenter/MessageCenterWebPart.manifest.json"
+        }
+      ]
+    }
+  },
+  "externals": {},
+  "localizedResources": {
+    "MessageCenterWebPartStrings": "lib/webparts/messageCenter/loc/{locale}.js"
+  }
+}
