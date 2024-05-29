@@ -1,4 +1,5 @@
 import { ContextInfo, ThemeManager } from "gd-sprest-bs";
+import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
 import { InstallationRequired } from "dattatable";
 import { App } from "./app";
 import { Configuration } from "./cfg";
@@ -8,9 +9,25 @@ import Strings, { setContext } from "./strings";
 // Styling
 import "./styles.scss";
 
+// Properties
+interface IProps {
+    el: HTMLElement;
+    context?: any;
+    displayMode?: number;
+    envType?: number;
+    listName?: string;
+    tileColumnSize?: number;
+    tilePageSize?: number;
+    timeFormat?: string;
+    timeZone?: string;
+    title?: string;
+    sourceUrl?: string;
+}
+
 // Create the global variable for this solution
 const GlobalVariable = {
     Configuration,
+    getLogo: () => { return clipboard(28, 28); },
     render: (el, context?, sourceUrl?: string) => {
         // See if the page context exists
         if (context) {

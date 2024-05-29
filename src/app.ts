@@ -1,5 +1,6 @@
 import { CanvasForm, Dashboard } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
+import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
 import { DataSource, IListItem } from "./ds";
 import Strings from "./strings";
 
@@ -61,7 +62,22 @@ export class App {
                 ]
             },
             navigation: {
-                title: Strings.ProjectName
+                title: Strings.ProjectName,
+                onRendering: props => {
+                    // Update the navigation properties
+                    props.className = "navbar-expand rounded-top";
+                    props.type = Components.NavbarTypes.Primary;
+
+                    // Add a logo to the navbar brand
+                    let navText = document.createElement("div");
+                    navText.classList.add("ms-2");
+                    navText.append(Strings.ProjectName);
+                    let navIcon = document.createElement("div");
+                    navIcon.classList.add("d-flex");
+                    navIcon.appendChild(clipboard(32, 32));
+                    navIcon.appendChild(navText);
+                    props.brand = navIcon;
+                }
             },
             footer: {
                 itemsEnd: [
@@ -209,9 +225,9 @@ export class App {
                                     <div class="fs-6">Service:</div>
                                     <div class="mb-3">${el.innerHTML}</div>
                                     <div class="fs-6">Platform:</div>
-                                    <div class="mb-3">${item.Platform}</div>
+                                    <div class="mb-3">${item.Platform || ""}</div>
                                     <div class="fs-6">Message ID:</div>
-                                    <div class="mb-3 fw-semibold">${item.MessageId}</div>
+                                    <div class="mb-3 fw-semibold">${item.MessageId || ""}</div>
                                     <div class="fs-6">Roadmap ID:</div>
                                     <div class="mb-3"><a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${item.RoadMapId}">${item.RoadMapId || ""}</a></div>
                                     <div class="fs-6">Published:</div>
