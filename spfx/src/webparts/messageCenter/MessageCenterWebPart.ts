@@ -3,7 +3,7 @@ import {
   IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneHorizontalRule, PropertyPaneLabel,
   PropertyPaneLink, PropertyPaneSlider, PropertyPaneTextField
 } from '@microsoft/sp-property-pane';
-import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
+import { BaseClientSideWebPart, WebPartContext } from '@microsoft/sp-webpart-base';
 import type { IReadonlyTheme } from '@microsoft/sp-component-base';
 
 //import styles from './MessageCenterWebPart.module.scss';
@@ -29,7 +29,7 @@ declare const MessageCenter: {
   listName: string;
   render: (props: {
     el: HTMLElement;
-    context?: any;
+    context?: WebPartContext;
     displayMode?: number;
     envType?: number;
     listName?: string;
@@ -114,9 +114,9 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     let qs = document.location.search.split('?');
     qs = qs.length > 1 ? qs[1].split('&') : [];
     for (let i = 0; i < qs.length; i++) {
-      let qsItem = qs[i].split('=');
-      let key = qsItem[0];
-      let value = qsItem[1];
+      const qsItem = qs[i].split('=');
+      const key = qsItem[0];
+      const value = qsItem[1];
 
       // See if this is the 'debug' key
       if (key === "debug") {
