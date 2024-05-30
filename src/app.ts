@@ -1,6 +1,7 @@
 import { CanvasForm, Dashboard } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
 import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
+import * as moment from 'moment-timezone';
 import { DataSource, IListItem } from "./ds";
 import Strings from "./strings";
 
@@ -88,8 +89,8 @@ export class App {
             },
             tiles: {
                 items: DataSource.List.Items,
-                colSize: 3,
-                paginationLimit: 9,
+                colSize: Strings.TileColumnSize,
+                paginationLimit: Strings.TilePageSize,
                 filterFields: ["Category", "Services", "Severity", "Tags"],
                 titleFields: ["MessageId", "RoadMapId"],
                 titleTemplate: `
@@ -156,9 +157,9 @@ export class App {
             // Add a button for additional details
             Components.Tooltip({
                 el,
-                content: "Click to view additional details for this item.",
+                content: Strings.MoreInfoTooltip,
                 btnProps: {
-                    text: "Details",
+                    text: Strings.MoreInfo,
                     type: Components.ButtonTypes.OutlineSuccess,
                     isSmall: true,
                     onClick: () => {
@@ -196,23 +197,12 @@ export class App {
                             type: Components.AlertTypes.Secondary
                         });
 
-                        // Render the relevance
-                        let elRelevance = document.createElement("div");
-                        let numbOfIcons = 1;
-                        switch (item.Severity) {
-                            case "normal":
-                                numbOfIcons = 1;
-                                break;
-                            case "high":
-                                numbOfIcons = 2;
-                                break;
-                            case "critical":
-                                numbOfIcons = 3;
-                                break;
+                        // Set the published date
+                        let publishedDate = "";
+                        if (item.PublishedDate) {
+                            // Format the date/time
+                            publishedDate = moment.utc(item.PublishedDate).tz(Strings.TimeZone).format(Strings.TimeFormat);
                         }
-
-                        // See if this is a major change, and increment the icons
-                        if (item.IsMajorChange) { numbOfIcons++; }
 
                         // Render the body
                         CanvasForm.BodyElement.innerHTML = `
@@ -231,7 +221,7 @@ export class App {
                                     <div class="fs-6">Roadmap ID:</div>
                                     <div class="mb-3"><a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${item.RoadMapId}">${item.RoadMapId || ""}</a></div>
                                     <div class="fs-6">Published:</div>
-                                    <div class="mb-3">${item.PublishedDate || ""}</div>
+                                    <div class="mb-3">${publishedDate}</div>
                                     <div class="fs-6">Tag(s):</div>
                                     <div class="mb-3">${badges.join('\n')}</div>
                                 </div>

@@ -10,7 +10,6 @@ export interface IAppProps {
     moreInfo?: string;
     moreInfoTooltip?: string;
     tileColumnSize?: number;
-    tileCompact?: boolean;
     tilePageSize?: number;
     timeFormat?: string;
     timeZone?: string;
@@ -22,23 +21,20 @@ export interface IAppProps {
 // This is for SPFx or Teams solutions
 export const setContext = (props: IAppProps) => {
     // Set the context
-    ContextInfo.setPageContext(props.context.pageContext);
+    props.context ? ContextInfo.setPageContext(props.context.pageContext) : null;
 
     // Update the properties
     Strings.IsClassic = props.envType == SPTypes.EnvironmentType.ClassicSharePoint;
     Strings.SourceUrl = props.sourceUrl || ContextInfo.webServerRelativeUrl;
 
     // Update the MoreInfo from SPFx title field
-    props.moreInfo ? Strings.MoreInfo = props.moreInfo : Strings.MoreInfo = null;
+    props.moreInfo ? Strings.MoreInfo = props.moreInfo : null;
 
     // Update the MoreInfo from SPFx title field
     props.moreInfoTooltip ? Strings.MoreInfoTooltip = props.moreInfoTooltip : null;
 
     // Update the TileColumnSize from SPFx value
     props.tileColumnSize ? Strings.TileColumnSize = props.tileColumnSize : null;
-
-    // Update the TileCompact value from SPFx settings
-    (typeof (props.tileCompact) === "undefined") ? null : Strings.TileCompact = props.tileCompact;
 
     // Update the TilePageSize from SPFx value, set it to max value if OnlyTiles = true
     props.tilePageSize ? Strings.TilePageSize = props.tilePageSize : null;
@@ -63,14 +59,12 @@ const Strings = {
     Lists: {
         Main: "Message Center"
     },
-    MaxPageSize: 500,
-    MoreInfo: null,
-    MoreInfoTooltip: "View more information",
+    MoreInfo: "Details",
+    MoreInfoTooltip: "Click to view additional details for this item.",
     ProjectName: "Message Center",
     ProjectDescription: "The Message Center app is a solution that reads service messages data from a SharePoint list and presents it to all users with an intuitive interface.",
     SourceUrl: ContextInfo.webServerRelativeUrl,
     TileColumnSize: 3,
-    TileCompact: false,
     TilePageSize: 9,
     TimeFormat: "YYYY-MMM-DD HH:mm:ss zz",
     TimeZone: "America/New_York",

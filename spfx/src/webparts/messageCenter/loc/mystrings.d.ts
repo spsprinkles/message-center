@@ -6,7 +6,6 @@ declare interface IMessageCenterWebPartStrings {
   MoreInfoTooltipFieldDescription: string;
   MoreInfoTooltipFieldLabel: string;
   TileColumnSizeFieldLabel: string;
-  TileCompactFieldLabel: string;
   TilePageSizeFieldLabel: string;
   TimeFormatFieldDescription: string;
   TimeFormatFieldLabel: string;

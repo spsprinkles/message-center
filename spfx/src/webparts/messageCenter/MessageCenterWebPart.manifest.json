@@ -34,7 +34,6 @@
         "listName": "Message Center",
         "moreInfoTooltip": "View more information",
         "tileColumnSize": 3,
-        "tileCompact": false,
         "tilePageSize": 9,
         "timeFormat": "YYYY-MMM-DD HH:mm:ss zz",
         "timeZone": "America/New_York",

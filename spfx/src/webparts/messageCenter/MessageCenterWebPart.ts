@@ -12,7 +12,6 @@ export interface IMessageCenterWebPartProps {
   moreInfo: string;
   moreInfoTooltip: string;
   tileColumnSize: number;
-  tileCompact: boolean;
   tilePageSize: number;
   timeFormat: string;
   timeZone: string;
@@ -35,7 +34,6 @@ declare const MessageCenter: {
     moreInfo?: string;
     moreInfoTooltip?: string;
     tileColumnSize?: number;
-    tileCompact?: boolean;
     tilePageSize?: number;
     timeFormat?: string;
     timeZone?: string;
@@ -44,7 +42,6 @@ declare const MessageCenter: {
   }) => void;
   moreInfoTooltip: string;
   tileColumnSize: number;
-  tileCompact: boolean;
   tilePageSize: number;
   timeFormat: string;
   timeZone: string;
@@ -67,7 +64,6 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     if (!this.properties.listName) { this.properties.listName = MessageCenter.listName; }
     if (!this.properties.moreInfoTooltip) { this.properties.moreInfoTooltip = MessageCenter.moreInfoTooltip; }
     if (!this.properties.tileColumnSize) { this.properties.tileColumnSize = MessageCenter.tileColumnSize; }
-    if (typeof (this.properties.tileCompact) === "undefined") { this.properties.tileCompact = MessageCenter.tileCompact; }
     if (!this.properties.tilePageSize) { this.properties.tilePageSize = MessageCenter.tilePageSize; }
     if (!this.properties.timeFormat) { this.properties.timeFormat = MessageCenter.timeFormat; }
     if (!this.properties.timeZone) { this.properties.timeZone = MessageCenter.timeZone; }
@@ -81,6 +77,8 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
       displayMode: this.displayMode,
       envType: Environment.type,
       listName: this.properties.listName,
+      moreInfo: this.properties.moreInfo,
+      moreInfoTooltip: this.properties.moreInfoTooltip,
       tileColumnSize: this.properties.tileColumnSize,
       tilePageSize: this.properties.tilePageSize,
       timeFormat: this.properties.timeFormat,
@@ -135,11 +133,6 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
             {
               groupName: "Basic Settings:",
               groupFields: [
-                PropertyPaneToggle('tileCompact', {
-                  label: strings.TileCompactFieldLabel,
-                  offText: "Standard",
-                  onText: "Compact"
-                }),
                 PropertyPaneSlider('tileColumnSize', {
                   label: strings.TileColumnSizeFieldLabel,
                   max: 6,
