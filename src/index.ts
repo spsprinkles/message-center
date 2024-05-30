@@ -4,39 +4,23 @@ import { InstallationRequired } from "dattatable";
 import { App } from "./app";
 import { Configuration } from "./cfg";
 import { DataSource } from "./ds";
-import Strings, { setContext } from "./strings";
+import Strings, { IAppProps, setContext } from "./strings";
 
 // Styling
 import "./styles.scss";
 
-// Properties
-interface IProps {
-    el: HTMLElement;
-    context?: any;
-    displayMode?: number;
-    envType?: number;
-    listName?: string;
-    tileColumnSize?: number;
-    tilePageSize?: number;
-    timeFormat?: string;
-    timeZone?: string;
-    title?: string;
-    sourceUrl?: string;
-}
 
 // Create the global variable for this solution
 const GlobalVariable = {
     Configuration,
     getLogo: () => { return clipboard(28, 28); },
-    render: (el, context?, sourceUrl?: string) => {
-        // See if the page context exists
-        if (context) {
-            // Set the context
-            setContext(context);
+    render: (props: IAppProps) => {
+        // Set the context
+        setContext(props);
 
-            // Update the configuration
-            Configuration.setWebUrl(sourceUrl || ContextInfo.webServerRelativeUrl);
-        }
+        // Update the configuration
+        Configuration.setWebUrl(props.sourceUrl || ContextInfo.webServerRelativeUrl);
+        props.listName ? Configuration._configuration.ListCfg[0].ListInformation.Title = props.listName : null;
 
         // Initialize the application
         DataSource.init().then(
@@ -45,7 +29,7 @@ const GlobalVariable = {
                 // Load the current theme and apply it to the components
                 ThemeManager.load(true).then(() => {
                     // Create the application
-                    new App(el);
+                    new App(props.el);
                 });
             },
 
@@ -74,5 +58,5 @@ window[Strings.GlobalVariable] = GlobalVariable;
 let elApp = document.querySelector("#" + Strings.AppElementId) as HTMLElement;
 if (elApp) {
     // Render the application
-    GlobalVariable.render(elApp);
+    GlobalVariable.render({ el: elApp });
 }

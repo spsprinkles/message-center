@@ -1,8 +1,5 @@
 import { DisplayMode, Environment, Version } from '@microsoft/sp-core-library';
-import {
-  type IPropertyPaneConfiguration,
-  PropertyPaneTextField
-} from '@microsoft/sp-property-pane';
+import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneHorizontalRule, PropertyPaneLabel, PropertyPaneLink, PropertyPaneSlider, PropertyPaneTextField, PropertyPaneToggle } from '@microsoft/sp-property-pane';
 import { BaseClientSideWebPart, WebPartContext } from '@microsoft/sp-webpart-base';
 import type { IReadonlyTheme } from '@microsoft/sp-component-base';
 import { escape } from '@microsoft/sp-lodash-subset';
@@ -11,7 +8,16 @@ import { escape } from '@microsoft/sp-lodash-subset';
 import * as strings from 'MessageCenterWebPartStrings';
 
 export interface IMessageCenterWebPartProps {
-  description: string;
+  listName: string;
+  moreInfo: string;
+  moreInfoTooltip: string;
+  tileColumnSize: number;
+  tileCompact: boolean;
+  tilePageSize: number;
+  timeFormat: string;
+  timeZone: string;
+  title: string;
+  webUrl: string;
 }
 
 // Reference the solution
@@ -26,14 +32,19 @@ declare const MessageCenter: {
     displayMode?: number;
     envType?: number;
     listName?: string;
+    moreInfo?: string;
+    moreInfoTooltip?: string;
     tileColumnSize?: number;
+    tileCompact?: boolean;
     tilePageSize?: number;
     timeFormat?: string;
     timeZone?: string;
     title?: string;
     sourceUrl?: string;
   }) => void;
+  moreInfoTooltip: string;
   tileColumnSize: number;
+  tileCompact: boolean;
   tilePageSize: number;
   timeFormat: string;
   timeZone: string;
@@ -53,15 +64,14 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     }
 
     // Set the default property values
-    if (!this.properties.listName) { this.properties.listName = M365ServiceHealth.listName; }
-    if (!this.properties.moreInfoTooltip) { this.properties.moreInfoTooltip = M365ServiceHealth.moreInfoTooltip; }
-    if (typeof (this.properties.onlyTiles) === "undefined") { this.properties.onlyTiles = M365ServiceHealth.onlyTiles; }
-    if (!this.properties.tileColumnSize) { this.properties.tileColumnSize = M365ServiceHealth.tileColumnSize; }
-    if (typeof (this.properties.tileCompact) === "undefined") { this.properties.tileCompact = M365ServiceHealth.tileCompact; }
-    if (!this.properties.tilePageSize) { this.properties.tilePageSize = M365ServiceHealth.tilePageSize; }
-    if (!this.properties.timeFormat) { this.properties.timeFormat = M365ServiceHealth.timeFormat; }
-    if (!this.properties.timeZone) { this.properties.timeZone = M365ServiceHealth.timeZone; }
-    if (!this.properties.title) { this.properties.title = M365ServiceHealth.title; }
+    if (!this.properties.listName) { this.properties.listName = MessageCenter.listName; }
+    if (!this.properties.moreInfoTooltip) { this.properties.moreInfoTooltip = MessageCenter.moreInfoTooltip; }
+    if (!this.properties.tileColumnSize) { this.properties.tileColumnSize = MessageCenter.tileColumnSize; }
+    if (typeof (this.properties.tileCompact) === "undefined") { this.properties.tileCompact = MessageCenter.tileCompact; }
+    if (!this.properties.tilePageSize) { this.properties.tilePageSize = MessageCenter.tilePageSize; }
+    if (!this.properties.timeFormat) { this.properties.timeFormat = MessageCenter.timeFormat; }
+    if (!this.properties.timeZone) { this.properties.timeZone = MessageCenter.timeZone; }
+    if (!this.properties.title) { this.properties.title = MessageCenter.title; }
     if (!this.properties.webUrl) { this.properties.webUrl = this.context.pageContext.web.serverRelativeUrl; }
 
     // Render the application
@@ -98,6 +108,25 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     return Version.parse(this.context.manifest.version);
   }
 
+  // Checks if is in debug mode from the query string
+  private debug(): boolean {
+    // Get the parameters from the query string
+    let qs = document.location.search.split('?');
+    qs = qs.length > 1 ? qs[1].split('&') : [];
+    for (let i = 0; i < qs.length; i++) {
+      let qsItem = qs[i].split('=');
+      let key = qsItem[0];
+      let value = qsItem[1];
+
+      // See if this is the 'debug' key
+      if (key === "debug") {
+        // Return the item
+        return value === "true";
+      }
+    }
+    return false;
+  }
+
   protected getPropertyPaneConfiguration(): IPropertyPaneConfiguration {
     return {
       pages: [
@@ -110,11 +139,6 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
                   label: strings.TileCompactFieldLabel,
                   offText: "Standard",
                   onText: "Compact"
-                }),
-                PropertyPaneToggle('onlyTiles', {
-                  label: strings.OnlyTilesFieldLabel,
-                  offText: "Full App",
-                  onText: "Only Tiles"
                 }),
                 PropertyPaneSlider('tileColumnSize', {
                   label: strings.TileColumnSizeFieldLabel,
@@ -132,12 +156,6 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
                   label: strings.TitleFieldLabel,
                   description: strings.TitleFieldDescription
                 }),
-                PropertyFieldMultiSelect('showServices', {
-                  key: 'showServices',
-                  label: strings.ShowServicesFieldLabel,
-                  options: this._serviceOptions,
-                  selectedKeys: this.properties.showServices
-                })
               ]
             }
           ]
@@ -197,7 +215,7 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
                   text: "Version: " + this.context.manifest.version
                 }),
                 PropertyPaneLabel('description', {
-                  text: M365ServiceHealth.description
+                  text: MessageCenter.description
                 }),
                 PropertyPaneLabel('about', {
                   text: "We think adding sprinkles to a donut just makes it better! SharePoint Sprinkles builds apps that are sprinkled on top of SharePoint, making your experience even better. Check out our site below to discover other SharePoint Sprinkles apps, or connect with us on GitHub."

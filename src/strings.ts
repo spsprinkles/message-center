@@ -1,14 +1,56 @@
 import { ContextInfo, SPTypes } from "gd-sprest-bs";
 
+// App Properties
+export interface IAppProps {
+    el: HTMLElement;
+    context?: any;
+    displayMode?: number;
+    envType?: number;
+    listName?: string;
+    moreInfo?: string;
+    moreInfoTooltip?: string;
+    tileColumnSize?: number;
+    tileCompact?: boolean;
+    tilePageSize?: number;
+    timeFormat?: string;
+    timeZone?: string;
+    title?: string;
+    sourceUrl?: string;
+}
+
 // Sets the context information
 // This is for SPFx or Teams solutions
-export const setContext = (context, envType?: number, sourceUrl?: string) => {
+export const setContext = (props: IAppProps) => {
     // Set the context
-    ContextInfo.setPageContext(context.pageContext);
+    ContextInfo.setPageContext(props.context.pageContext);
 
     // Update the properties
-    Strings.IsClassic = envType == SPTypes.EnvironmentType.ClassicSharePoint;
-    Strings.SourceUrl = sourceUrl || ContextInfo.webServerRelativeUrl;
+    Strings.IsClassic = props.envType == SPTypes.EnvironmentType.ClassicSharePoint;
+    Strings.SourceUrl = props.sourceUrl || ContextInfo.webServerRelativeUrl;
+
+    // Update the MoreInfo from SPFx title field
+    props.moreInfo ? Strings.MoreInfo = props.moreInfo : Strings.MoreInfo = null;
+
+    // Update the MoreInfo from SPFx title field
+    props.moreInfoTooltip ? Strings.MoreInfoTooltip = props.moreInfoTooltip : null;
+
+    // Update the TileColumnSize from SPFx value
+    props.tileColumnSize ? Strings.TileColumnSize = props.tileColumnSize : null;
+
+    // Update the TileCompact value from SPFx settings
+    (typeof (props.tileCompact) === "undefined") ? null : Strings.TileCompact = props.tileCompact;
+
+    // Update the TilePageSize from SPFx value, set it to max value if OnlyTiles = true
+    props.tilePageSize ? Strings.TilePageSize = props.tilePageSize : null;
+
+    // Update the TimeFormat from SPFx value
+    props.timeFormat ? Strings.TimeFormat = props.timeFormat : null;
+
+    // Update the TimeZone from SPFx value
+    props.timeZone ? Strings.TimeZone = props.timeZone : null;
+
+    // Update the ProjectName from SPFx title field
+    props.title ? Strings.ProjectName = props.title : null;
 }
 
 /**
@@ -24,10 +66,8 @@ const Strings = {
     MaxPageSize: 500,
     MoreInfo: null,
     MoreInfoTooltip: "View more information",
-    OnlyTiles: false,
     ProjectName: "Message Center",
     ProjectDescription: "The Message Center app is a solution that reads service messages data from a SharePoint list and presents it to all users with an intuitive interface.",
-    ShowServices: null,
     SourceUrl: ContextInfo.webServerRelativeUrl,
     TileColumnSize: 3,
     TileCompact: false,

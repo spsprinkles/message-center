@@ -1,7 +1,20 @@
 declare interface IMessageCenterWebPartStrings {
-  PropertyPaneDescription: string;
-  BasicGroupName: string;
-  DescriptionFieldLabel: string;
+  ListNameFieldDescription: string;
+  ListNameFieldLabel: string;
+  MoreInfoFieldDescription: string;
+  MoreInfoFieldLabel: string;
+  MoreInfoTooltipFieldDescription: string;
+  MoreInfoTooltipFieldLabel: string;
+  TileColumnSizeFieldLabel: string;
+  TileCompactFieldLabel: string;
+  TilePageSizeFieldLabel: string;
+  TimeFormatFieldDescription: string;
+  TimeFormatFieldLabel: string;
+  TimeZoneFieldLabel: string;
+  TitleFieldDescription: string;
+  TitleFieldLabel: string;
+  WebUrlFieldDescription: string;
+  WebUrlFieldLabel: string;
   AppLocalEnvironmentSharePoint: string;
   AppLocalEnvironmentTeams: string;
   AppLocalEnvironmentOffice: string;
@@ -10,7 +23,6 @@ declare interface IMessageCenterWebPartStrings {
   AppTeamsTabEnvironment: string;
   AppOfficeEnvironment: string;
   AppOutlookEnvironment: string;
-  UnknownEnvironment: string;
 }
 
 declare module 'MessageCenterWebPartStrings' {
