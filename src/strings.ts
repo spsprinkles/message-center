@@ -59,7 +59,7 @@ const Strings = {
     Lists: {
         Main: "Message Center"
     },
-    MoreInfo: "Details",
+    MoreInfo: "More Info",
     MoreInfoTooltip: "Click to view additional details for this item.",
     ProjectName: "Message Center",
     ProjectDescription: "The Message Center app is a solution that reads service messages data from a SharePoint list and presents it to all users with an intuitive interface.",

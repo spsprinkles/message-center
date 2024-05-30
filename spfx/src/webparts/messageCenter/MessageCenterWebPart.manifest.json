@@ -32,7 +32,8 @@
       "officeFabricIconFontName": "Page",
       "properties": {
         "listName": "Message Center",
-        "moreInfoTooltip": "View more information",
+        "moreInfo": "More Info",
+        "moreInfoTooltip": "Click to view additional details for this item.",
         "tileColumnSize": 3,
         "tilePageSize": 9,
         "timeFormat": "YYYY-MMM-DD HH:mm:ss zz",

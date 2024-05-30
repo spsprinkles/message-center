@@ -1,8 +1,10 @@
-import { DisplayMode, Environment, Version } from '@microsoft/sp-core-library';
-import { IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneHorizontalRule, PropertyPaneLabel, PropertyPaneLink, PropertyPaneSlider, PropertyPaneTextField, PropertyPaneToggle } from '@microsoft/sp-property-pane';
-import { BaseClientSideWebPart, WebPartContext } from '@microsoft/sp-webpart-base';
+import { Environment, Version } from '@microsoft/sp-core-library';
+import {
+  IPropertyPaneConfiguration, PropertyPaneDropdown, PropertyPaneHorizontalRule, PropertyPaneLabel,
+  PropertyPaneLink, PropertyPaneSlider, PropertyPaneTextField
+} from '@microsoft/sp-property-pane';
+import { BaseClientSideWebPart } from '@microsoft/sp-webpart-base';
 import type { IReadonlyTheme } from '@microsoft/sp-component-base';
-import { escape } from '@microsoft/sp-lodash-subset';
 
 //import styles from './MessageCenterWebPart.module.scss';
 import * as strings from 'MessageCenterWebPartStrings';
@@ -223,7 +225,7 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
                   target: "_blank"
                 }),
                 PropertyPaneLink('sourceLink', {
-                  href: "https://github.com/spsprinkles/m365-service-health/",
+                  href: "https://github.com/spsprinkles/message-center/",
                   text: "View Source on GitHub",
                   target: "_blank"
                 })
