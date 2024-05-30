@@ -3,23 +3,23 @@
   "solution": {
     "name": "message-center-client-side-solution",
     "id": "22c60fcb-b8cd-4e9e-98bf-f2e15bd4acfc",
-    "version": "1.0.0.0",
+    "version": "0.0.1.0",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "developer": {
-      "name": "",
-      "websiteUrl": "",
+      "name": "Gunjan Datta <gudatta@microsoft.com>",
+      "websiteUrl": "https://github.com/spsprinkles/message-center/",
       "privacyUrl": "",
       "termsOfUseUrl": "",
       "mpnId": "Undefined-1.18.2"
     },
     "metadata": {
       "shortDescription": {
-        "default": "message-center description"
+        "default": "A webpart showing the Message Center information for all users."
       },
       "longDescription": {
-        "default": "message-center description"
+        "default": "The Message Center app is a solution that reads service messages data from a SharePoint list and presents it to all users with an intuitive interface."
       },
       "screenshotPaths": [],
       "videoUrl": "",
@@ -35,6 +35,6 @@
     ]
   },
   "paths": {
-    "zippedPackage": "solution/message-center.sppkg"
+    "zippedPackage": "../../dist/message-center.sppkg"
   }
 }
