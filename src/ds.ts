@@ -124,13 +124,13 @@ export class DataSource {
             item.Severity ? filters.severity[item.Severity] = true : null;
 
             // Parse the services
-            let services = item.Services.results;
+            let services = item.Services?.results || [];
             for (let i = 0; i < services.length; i++) {
                 filters.services[services[i]] = true;
             }
 
             // Parse the tags
-            let tags = item.Tags.results;
+            let tags = item.Tags?.results || [];
             for (let i = 0; i < tags.length; i++) {
                 filters.tags[tags[i]] = true;
             }
