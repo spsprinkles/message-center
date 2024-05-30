@@ -179,10 +179,11 @@ export class App {
 
                         // Parse the tags
                         let badges = [];
-                        for (let i = 0; i < item.Tags.results.length; i++) {
+                        let tags = item.Tags?.results || [];
+                        for (let i = 0; i < tags.length; i++) {
                             badges.push(Components.Badge({
                                 className: "text-bg-secondary",
-                                content: item.Tags.results[i]
+                                content: tags[i]
                             }).el.outerHTML);
                         }
 
