@@ -299,6 +299,10 @@ export class App {
                     elIconType = CustomIconTypes.forms;
                     break;
 
+                case "Microsoft Intune":
+                    elIconType = CustomIconTypes.intune;
+                    break;
+
                 case "Microsoft Stream":
                     elIconType = CustomIconTypes.stream;
                     break;
