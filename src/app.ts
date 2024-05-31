@@ -267,6 +267,10 @@ export class App {
                     elIconType = CustomIconTypes.aIP;
                     break;
 
+                case "Dynamics 365 Apps":
+                    elIconType = CustomIconTypes.dynamics;
+                    break;
+
                 case "Exchange Online":
                     elIconType = CustomIconTypes.exchange;
                     break;
@@ -275,6 +279,16 @@ export class App {
                 case "Microsoft 365 for the web":
                 case "Microsoft 365 suite":
                     elIconType = CustomIconTypes.m365;
+                    break;
+
+                case "Microsoft Dataverse":
+                    elIconType = CustomIconTypes.dataverse;
+                    break;
+
+                case "Microsoft Defender":
+                case "Microsoft Defender XDR":
+                case "Microsoft Defender for Cloud Apps":
+                    elIconType = CustomIconTypes.defender;
                     break;
 
                 case "Microsoft Entra":
@@ -295,6 +309,18 @@ export class App {
 
                 case "Microsoft Viva":
                     elIconType = CustomIconTypes.viva;
+                    break;
+
+                case "OneDrive for Business":
+                    elIconType = CustomIconTypes.oneDrive;
+                    break;
+
+                case "Power Apps":
+                    elIconType = CustomIconTypes.powerApps;
+                    break;
+
+                case "Power Platform":
+                    elIconType = CustomIconTypes.powerPlatform;
                     break;
 
                 case "SharePoint Online":
