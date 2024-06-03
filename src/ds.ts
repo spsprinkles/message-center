@@ -1,5 +1,6 @@
 import { List } from "dattatable";
 import { Components, Types } from "gd-sprest-bs";
+import { convertCAML } from "./common";
 import Strings from "./strings";
 
 /**
@@ -88,6 +89,14 @@ export class DataSource {
 
                     // Resolve the request
                     resolve();
+                },
+                onItemLoading: item => {
+                    // Convert the category & severity
+                    item.Category = convertCAML(item.Category);
+                    item.Severity = convertCAML(item.Severity);
+
+                    // Return the item
+                    return item;
                 }
             });
         });
