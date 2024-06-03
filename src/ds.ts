@@ -94,9 +94,6 @@ export class DataSource {
                     // Convert the category & severity
                     item.Category = convertCAML(item.Category);
                     item.Severity = convertCAML(item.Severity);
-
-                    // Return the item
-                    return item;
                 }
             });
         });
