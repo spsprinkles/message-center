@@ -1,6 +1,7 @@
 import { List } from "dattatable";
 import { Components, Types } from "gd-sprest-bs";
 import { convertCAML } from "./common";
+import { Security } from "./security";
 import Strings from "./strings";
 
 /**
@@ -59,7 +60,7 @@ export class DataSource {
         return new Promise((resolve, reject) => {
             return Promise.all([
                 // Load the security
-                //Security.init(),
+                Security.init(),
 
                 // Load the data
                 this.load()
