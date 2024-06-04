@@ -27,6 +27,12 @@ export const Configuration = Helper.SPConfig({
                     unlimited: true
                 } as Helper.IFieldInfoNote,
                 {
+                    name: "IsApproved",
+                    title: "Is Approved",
+                    type: Helper.SPCfgFieldType.Boolean,
+                    defaultValue: "0"
+                },
+                {
                     name: "IsMajorChange",
                     title: "Is Major Change",
                     type: Helper.SPCfgFieldType.Boolean,
