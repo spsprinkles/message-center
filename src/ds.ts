@@ -11,6 +11,7 @@ import Strings from "./strings";
 export interface IListItem extends Types.SP.ListItem {
     Category: string;
     Content: string;
+    IsApproved: boolean;
     IsMajorChange: boolean;
     Message: string;
     MessageId: string;
@@ -69,11 +70,19 @@ export class DataSource {
     }
 
     // Loads the list data
+    private static _approvedItems: IListItem[] = null;
+    static get ApprovedItems(): IListItem[] { return this._approvedItems; }
+    private static _requiresApprovalItems: IListItem[] = null;
+    static get RequiresApprovalItems(): IListItem[] { return this._requiresApprovalItems; }
     private static _list: List<IListItem>;
     static get List(): List<IListItem> { return this._list; }
     static load(): PromiseLike<void> {
         // Return a promise
         return new Promise((resolve, reject) => {
+            // Clear the items
+            this._approvedItems = [];
+            this._requiresApprovalItems = [];
+
             // Initialize the list
             this._list = new List<IListItem>({
                 listName: Strings.Lists.Main,
@@ -95,6 +104,13 @@ export class DataSource {
                     // Convert the category & severity
                     item.Category = convertCAML(item.Category);
                     item.Severity = convertCAML(item.Severity);
+
+                    // See if this item is approved
+                    if (item.IsApproved) {
+                        this._approvedItems.push(item);
+                    } else {
+                        this._requiresApprovalItems.push(item);
+                    }
                 }
             });
         });
@@ -174,6 +190,10 @@ export class DataSource {
     static refresh(): PromiseLike<IListItem[]> {
         // Return a promise
         return new Promise((resolve, reject) => {
+            // Clear the items
+            this._approvedItems = [];
+            this._requiresApprovalItems = [];
+
             // Refresh the data
             DataSource.List.refresh().then(resolve, reject);
         });

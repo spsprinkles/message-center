@@ -1,24 +1,40 @@
-import { CanvasForm, Dashboard } from "dattatable";
+import { CanvasForm, Dashboard, LoadingDialog, Modal } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
 import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
 import * as moment from 'moment-timezone';
 import { DataSource, IListItem } from "./ds";
+import { Security } from "./security";
 import Strings from "./strings";
 
 /**
  * Main Application
  */
 export class App {
+    private _dashboard: Dashboard = null;
+    private _requiresApprovalFl: boolean = false;
+
     // Constructor
     constructor(el: HTMLElement) {
         // Render the dashboard
         this.render(el);
     }
 
+    // Refreshes the dashboard
+    private refresh() {
+        // See if this is an admin
+        if (Security.IsAdmin) {
+            // Refresh the items
+            this._dashboard.refresh(this._requiresApprovalFl ? DataSource.RequiresApprovalItems : DataSource.List.Items);
+        } else {
+            // Refresh the items
+            this._dashboard.refresh(DataSource.ApprovedItems);
+        }
+    }
+
     // Renders the dashboard
     private render(el: HTMLElement) {
         // Create the dashboard
-        let dashboard = new Dashboard({
+        this._dashboard = new Dashboard({
             el,
             hideHeader: true,
             useModal: true,
@@ -30,7 +46,7 @@ export class App {
                         multi: true,
                         onFilter: (values: string[]) => {
                             // Filter the tiles
-                            dashboard.filterTiles(values);
+                            this._dashboard.filterTiles(values);
                         }
                     },
                     {
@@ -39,7 +55,7 @@ export class App {
                         multi: true,
                         onFilter: (values: string[]) => {
                             // Filter the tiles
-                            dashboard.filterTiles(values);
+                            this._dashboard.filterTiles(values);
                         }
                     },
                     {
@@ -48,7 +64,7 @@ export class App {
                         multi: true,
                         onFilter: (values: string[]) => {
                             // Filter the tiles
-                            dashboard.filterTiles(values);
+                            this._dashboard.filterTiles(values);
                         }
                     },
                     {
@@ -57,13 +73,30 @@ export class App {
                         multi: true,
                         onFilter: (values: string[]) => {
                             // Filter the tiles
-                            dashboard.filterTiles(values);
+                            this._dashboard.filterTiles(values);
                         }
                     }
                 ]
             },
             navigation: {
                 title: Strings.ProjectName,
+                itemsEnd: Security.IsAdmin ? [
+                    {
+                        isButton: true,
+                        className: "btn-icon btn-outline-light me-2 p-2 py-1",
+                        text: "Needs Approval",
+                        onClick: (item, ev) => {
+                            // Flip the flag
+                            this._requiresApprovalFl = !this._requiresApprovalFl;
+
+                            // Update the button text
+                            (ev.target as HTMLElement).innerHTML = this._requiresApprovalFl ? "Show All" : "Needs Approval";
+
+                            // Refresh the items
+                            this.refresh();
+                        }
+                    }
+                ] : null,
                 onRendering: props => {
                     // Update the navigation properties
                     props.className = "navbar-expand rounded-top";
@@ -88,7 +121,7 @@ export class App {
                 ]
             },
             tiles: {
-                items: DataSource.List.Items,
+                items: Security.IsAdmin ? DataSource.List.Items : DataSource.ApprovedItems,
                 colSize: Strings.TileColumnSize,
                 paginationLimit: Strings.TilePageSize,
                 filterFields: ["Category", "Services", "Severity", "Tags"],
@@ -137,6 +170,9 @@ export class App {
 
                     // Render the details button
                     this.renderDetailsButton(el, item);
+
+                    // Render the approval button
+                    this.renderApprovalButton(el, item);
                 },
                 onColumnRendered: (el) => {
                     // Add spacing for the top of the card
@@ -145,6 +181,73 @@ export class App {
                 onCardRendered: (el) => {
                     // Add the class names for making the heights match
                     el.classList.add("h-100");
+                }
+            }
+        });
+    }
+
+    // Renders the approval button
+    private renderApprovalButton(el: HTMLElement, item: IListItem) {
+        // Ensure this is an admin
+        if (!Security.IsAdmin) { return; }
+
+        // See if this item is approved
+        if (item.IsApproved) { return; }
+
+        // Add a button for additional details
+        Components.Tooltip({
+            el,
+            content: "Click to approve the item and make it available to all users.",
+            btnProps: {
+                className: "ms-2",
+                text: "Approve",
+                type: Components.ButtonTypes.OutlineSuccess,
+                isSmall: true,
+                onClick: () => {
+                    // Display an approval modal
+                    Modal.clear();
+                    Modal.setHeader("Approve Item");
+
+                    // Render the body
+                    Modal.setBody("Approving this item will make it visible to all users. Are you sure you want to do this?");
+
+                    // Render the footer
+                    Components.TooltipGroup({
+                        el: Modal.FooterElement,
+                        tooltips: [
+                            {
+                                content: "Click to approve the item and make it available to all users.",
+                                btnProps: {
+                                    text: "Approve",
+                                    type: Components.ButtonTypes.OutlineSuccess,
+                                    onClick: () => {
+                                        // Hide the modal
+                                        Modal.hide();
+
+                                        // Show a loading dialog
+                                        LoadingDialog.setHeader("Approving Item");
+                                        LoadingDialog.setBody("This will close after the item has been updated...");
+                                        LoadingDialog.show();
+
+                                        // Update the item
+                                        item.update({ IsApproved: true }).execute(() => {
+                                            // Refresh the data source
+                                            DataSource.refresh().then(() => {
+                                                // Refresh the app
+                                                this.refresh();
+
+                                                // Close the loading dialog
+                                                LoadingDialog.hide();
+                                            });
+                                        });
+                                    }
+                                }
+                            }
+                        ]
+                    });
+
+                    // Show the modal
+                    Modal.show();
                 }
             }
         });
