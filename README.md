@@ -3,4 +3,4 @@ The Message Center app is a solution that reads message center from a SharePoint
 
 ![image](https://github.com/spsprinkles/message-center/assets/56934979/35cf54b4-50fe-47bc-84f6-e79545e21e87)
 
-See the [wiki](/spsprinkles/message-center/wiki) for additional information on this application.
+See the [wiki](https://github.com/spsprinkles/message-center/wiki) for additional information on this application.
