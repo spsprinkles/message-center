@@ -22,7 +22,7 @@ export interface IMessageCenterWebPartProps {
 }
 
 // Reference the solution
-import "../../../../dist/message-center.min.js";
+import "main-lib";
 declare const MessageCenter: {
   description: string;
   getLogo: () => SVGImageElement;
