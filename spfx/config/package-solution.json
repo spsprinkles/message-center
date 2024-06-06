@@ -1,7 +1,7 @@
 {
   "$schema": "https://developer.microsoft.com/json-schemas/spfx-build/package-solution.schema.json",
   "solution": {
-    "name": "message-center-client-side-solution",
+    "name": "message-center",
     "id": "22c60fcb-b8cd-4e9e-98bf-f2e15bd4acfc",
     "version": "0.0.1.0",
     "includeClientSideAssets": true,
