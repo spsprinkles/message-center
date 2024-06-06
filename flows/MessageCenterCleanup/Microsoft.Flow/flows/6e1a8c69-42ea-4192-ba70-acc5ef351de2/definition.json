@@ -1,1 +1,114 @@
-{"name":"1a00d06e-3570-4160-b20f-c75af05ecc86","id":"/providers/Microsoft.Flow/flows/1a00d06e-3570-4160-b20f-c75af05ecc86","type":"Microsoft.Flow/flows","properties":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_logicflows","displayName":"Message Center Cleanup","definition":{"metadata":{"workflowEntityId":null,"processAdvisorMetadata":null,"flowChargedByPaygo":null,"flowclientsuspensionreason":"None","flowclientsuspensiontime":null,"flowclientsuspensionreasondetails":null,"creator":{"id":"4af50d87-e728-484e-874c-3f4536b38fee","type":"User","tenantId":"aecb54e0-7430-409d-86a4-7639c743eee7"},"provisioningMethod":"FromDefinition","failureAlertSubscription":true,"clientLastModifiedTime":"2024-05-30T16:20:11.5687664Z","connectionKeySavedTimeKey":"2024-05-30T16:20:11.5687664Z"},"$schema":"https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#","contentVersion":"undefined","parameters":{"$authentication":{"defaultValue":{},"type":"SecureObject"},"$connections":{"defaultValue":{},"type":"Object"}},"triggers":{"Recurrence":{"recurrence":{"frequency":"Day","interval":1,"timeZone":"Eastern Standard Time","schedule":{"hours":["22"]}},"metadata":{"operationMetadataId":"65987370-3e10-41c2-b203-9faf2e46fa5c"},"type":"Recurrence"}},"actions":{"Get_items":{"runAfter":{},"type":"OpenApiConnection","inputs":{"parameters":{"dataset":"https://dattaspo.sharepoint.com/sites/Demo/message-center","table":"7286b386-0f99-4be5-88e8-3fa9ccdfe5a6","$filter":"PublishedDate gt '@{formatDateTime(addDays(utcNow(), -60), 'yyyy-MM-dd')}T00:00:00'"},"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline","connectionName":"shared_sharepointonline","operationId":"GetItems"},"authentication":"@parameters('$authentication')"}},"Apply_to_each":{"foreach":"@outputs('Get_items')?['body/value']","actions":{"Delete_item":{"type":"OpenApiConnection","inputs":{"parameters":{"dataset":"https://dattaspo.sharepoint.com/sites/Demo/message-center","table":"7286b386-0f99-4be5-88e8-3fa9ccdfe5a6","id":"@items('Apply_to_each')['Id']"},"host":{"apiId":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline","connectionName":"shared_sharepointonline","operationId":"DeleteItem"},"authentication":"@parameters('$authentication')"}}},"runAfter":{"Get_items":["Succeeded"]},"type":"Foreach"}}},"connectionReferences":{"shared_sharepointonline":{"connectionName":"shared-sharepointonl-66a6d844-5e1b-4fa5-a8f1-40d37f28a005","source":"Embedded","id":"/providers/Microsoft.PowerApps/apis/shared_sharepointonline","tier":"NotSpecified"}},"flowFailureAlertSubscribed":false,"isManaged":false}}
+{
+    "name": "1a00d06e-3570-4160-b20f-c75af05ecc86",
+    "id": "/providers/Microsoft.Flow/flows/1a00d06e-3570-4160-b20f-c75af05ecc86",
+    "type": "Microsoft.Flow/flows",
+    "properties": {
+        "apiId": "/providers/Microsoft.PowerApps/apis/shared_logicflows",
+        "displayName": "Message Center Cleanup",
+        "definition": {
+            "metadata": {
+                "workflowEntityId": null,
+                "processAdvisorMetadata": null,
+                "flowChargedByPaygo": null,
+                "flowclientsuspensionreason": "None",
+                "flowclientsuspensiontime": null,
+                "flowclientsuspensionreasondetails": null,
+                "creator": {
+                    "id": "4af50d87-e728-484e-874c-3f4536b38fee",
+                    "type": "User",
+                    "tenantId": "aecb54e0-7430-409d-86a4-7639c743eee7"
+                },
+                "provisioningMethod": "FromDefinition",
+                "failureAlertSubscription": true,
+                "clientLastModifiedTime": "2024-05-30T16:20:11.5687664Z",
+                "connectionKeySavedTimeKey": "2024-05-30T16:20:11.5687664Z"
+            },
+            "$schema": "https://schema.management.azure.com/providers/Microsoft.Logic/schemas/2016-06-01/workflowdefinition.json#",
+            "contentVersion": "undefined",
+            "parameters": {
+                "$authentication": {
+                    "defaultValue": {},
+                    "type": "SecureObject"
+                },
+                "$connections": {
+                    "defaultValue": {},
+                    "type": "Object"
+                }
+            },
+            "triggers": {
+                "Recurrence": {
+                    "recurrence": {
+                        "frequency": "Day",
+                        "interval": 1,
+                        "timeZone": "Eastern Standard Time",
+                        "schedule": {
+                            "hours": [
+                                "22"
+                            ]
+                        }
+                    },
+                    "metadata": {
+                        "operationMetadataId": "65987370-3e10-41c2-b203-9faf2e46fa5c"
+                    },
+                    "type": "Recurrence"
+                }
+            },
+            "actions": {
+                "Get_items": {
+                    "runAfter": {},
+                    "type": "OpenApiConnection",
+                    "inputs": {
+                        "parameters": {
+                            "dataset": "https://dattaspo.sharepoint.com/sites/Demo/message-center",
+                            "table": "7286b386-0f99-4be5-88e8-3fa9ccdfe5a6",
+                            "$filter": "PublishedDate gt '@{formatDateTime(addDays(utcNow(), -60), 'yyyy-MM-dd')}T00:00:00'"
+                        },
+                        "host": {
+                            "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                            "connectionName": "shared_sharepointonline",
+                            "operationId": "GetItems"
+                        },
+                        "authentication": "@parameters('$authentication')"
+                    }
+                },
+                "Apply_to_each": {
+                    "foreach": "@outputs('Get_items')?['body/value']",
+                    "actions": {
+                        "Delete_item": {
+                            "type": "OpenApiConnection",
+                            "inputs": {
+                                "parameters": {
+                                    "dataset": "https://dattaspo.sharepoint.com/sites/Demo/message-center",
+                                    "table": "7286b386-0f99-4be5-88e8-3fa9ccdfe5a6",
+                                    "id": "@items('Apply_to_each')['Id']"
+                                },
+                                "host": {
+                                    "apiId": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                                    "connectionName": "shared_sharepointonline",
+                                    "operationId": "DeleteItem"
+                                },
+                                "authentication": "@parameters('$authentication')"
+                            }
+                        }
+                    },
+                    "runAfter": {
+                        "Get_items": [
+                            "Succeeded"
+                        ]
+                    },
+                    "type": "Foreach"
+                }
+            }
+        },
+        "connectionReferences": {
+            "shared_sharepointonline": {
+                "connectionName": "shared-sharepointonl-66a6d844-5e1b-4fa5-a8f1-40d37f28a005",
+                "source": "Embedded",
+                "id": "/providers/Microsoft.PowerApps/apis/shared_sharepointonline",
+                "tier": "NotSpecified"
+            }
+        },
+        "flowFailureAlertSubscribed": false,
+        "isManaged": false
+    }
+}
