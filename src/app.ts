@@ -308,6 +308,21 @@ export class App {
                             publishedDate = moment.utc(item.PublishedDate).tz(Strings.TimeZone).format(Strings.TimeFormat);
                         }
 
+                        // Set the roadmap links
+                        let roadmapLinks = "";
+                        let roadmapIds = (item.RoadMapId || "").split(',');
+                        for (let i = 0; i < roadmapIds.length; i++) {
+                            // Ensure the id exists
+                            let roadmapId = roadmapIds[i].trim();
+                            if (roadmapId.length > 0) {
+                                // Add a space for multiple links
+                                i > 0 ? roadmapLinks += " " : null;
+
+                                // Add the link
+                                roadmapLinks += `<a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${roadmapId}">${roadmapId}</a>`;
+                            }
+                        }
+
                         // Render the body
                         CanvasForm.BodyElement.innerHTML = `
                             <div class="row">
@@ -323,7 +338,7 @@ export class App {
                                     <div class="fs-6">Message ID:</div>
                                     <div class="mb-3 fw-semibold">${item.MessageId || ""}</div>
                                     <div class="fs-6">Roadmap ID:</div>
-                                    <div class="mb-3"><a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${item.RoadMapId}">${item.RoadMapId || ""}</a></div>
+                                    <div class="mb-3">${roadmapLinks}</div>
                                     <div class="fs-6">Published:</div>
                                     <div class="mb-3">${publishedDate}</div>
                                     <div class="fs-6">Tag(s):</div>
