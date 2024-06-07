@@ -15,11 +15,13 @@ export interface IListItem extends Types.SP.ListItem {
     IsMajorChange: boolean;
     Message: string;
     MessageId: string;
+    Notes: string;
     Platform: string;
     PublishedDate: string;
     RoadMapId: string;
     Services: { results: string[]; }
     Severity: string;
+    Status: string;
     Summary: string;
     Tags: { results: string[]; }
 }

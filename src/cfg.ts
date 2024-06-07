@@ -51,6 +51,13 @@ export const Configuration = Helper.SPConfig({
                     type: Helper.SPCfgFieldType.Text
                 },
                 {
+                    name: "Notes",
+                    title: "Notes",
+                    type: Helper.SPCfgFieldType.Note,
+                    noteType: SPTypes.FieldNoteType.TextOnly,
+                    unlimited: true
+                } as Helper.IFieldInfoNote,
+                {
                     name: "Platform",
                     title: "Platform",
                     type: Helper.SPCfgFieldType.Text
@@ -78,7 +85,16 @@ export const Configuration = Helper.SPConfig({
                     title: "Severity",
                     type: Helper.SPCfgFieldType.Choice,
                     fillInChoice: true,
+                    defaultValue: "",
                     choices: ["normal", "high", "critical"]
+                } as Helper.IFieldInfoChoice,
+                {
+                    name: "Status",
+                    title: "Status",
+                    type: Helper.SPCfgFieldType.Choice,
+                    fillInChoice: true,
+                    defaultValue: "",
+                    choices: ["Do Not Publish", "Needs Review"]
                 } as Helper.IFieldInfoChoice,
                 {
                     name: "Summary",

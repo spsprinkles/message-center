@@ -1,8 +1,10 @@
 import { CanvasForm, Dashboard, LoadingDialog, Modal } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
 import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
+import { gearWideConnected } from "gd-sprest-bs/build/icons/svgs/gearWideConnected";
 import * as moment from 'moment-timezone';
 import { DataSource, IListItem } from "./ds";
+import { InstallationModal } from "./install";
 import { Security } from "./security";
 import Strings from "./strings";
 
@@ -81,6 +83,50 @@ export class App {
             navigation: {
                 title: Strings.ProjectName,
                 itemsEnd: Security.IsAdmin ? [
+                    {
+                        isButton: true,
+                        className: "btn-icon btn-outline-light me-2 p-2 py-1",
+                        iconSize: 22,
+                        iconType: gearWideConnected,
+                        text: "Settings",
+                        items: [
+                            {
+                                text: "App Settings",
+                                onClick: () => {
+                                    // Show the install modal
+                                    InstallationModal.show(true);
+                                }
+                            },
+                            {
+                                text: Strings.Lists.Main + " List",
+                                onClick: () => {
+                                    // Show the FAQ list in a new tab
+                                    window.open(Strings.SourceUrl + "/Lists/" + Strings.Lists.Main.split(" ").join(""), "_blank");
+                                }
+                            },
+                            {
+                                text: Security.AdminGroup.Title + " Group",
+                                onClick: () => {
+                                    // Show the settings in a new tab
+                                    window.open(Strings.SourceUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + Security.AdminGroup.Id);
+                                }
+                            },
+                            {
+                                text: Security.MemberGroup.Title + " Group",
+                                onClick: () => {
+                                    // Show the settings in a new tab
+                                    window.open(Strings.SourceUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + Security.MemberGroup.Id);
+                                }
+                            },
+                            {
+                                text: Security.VisitorGroup.Title + " Group",
+                                onClick: () => {
+                                    // Show the settings in a new tab
+                                    window.open(Strings.SourceUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + Security.VisitorGroup.Id);
+                                }
+                            }
+                        ]
+                    },
                     {
                         isButton: true,
                         className: "btn-icon btn-outline-light me-2 p-2 py-1",
