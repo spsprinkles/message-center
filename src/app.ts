@@ -369,7 +369,11 @@ export class App {
                                         let values = form.getValues();
                                         if (values["Approve"]) {
                                             // Update the item
-                                            item.update({ IsApproved: true }).execute(() => {
+                                            item.update({
+                                                IsApproved: true,
+                                                Status: "",
+                                                Notes: ""
+                                            }).execute(() => {
                                                 // Refresh the data source
                                                 DataSource.refresh().then(() => {
                                                     // Refresh the app
