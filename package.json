@@ -1,6 +1,6 @@
 {
   "name": "message-center",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "The Message Center app is a solution that reads service messages data from a SharePoint list and presents it to all users with an intuitive interface.",
   "main": "src/index.ts",
   "scripts": {
