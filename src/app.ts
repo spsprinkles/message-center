@@ -1,6 +1,7 @@
 import { CanvasForm, Dashboard, LoadingDialog, Modal } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
 import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
+import { funnel } from "gd-sprest-bs/build/icons/svgs/funnel";
 import { gearWideConnected } from "gd-sprest-bs/build/icons/svgs/gearWideConnected";
 import * as moment from 'moment-timezone';
 import { DataSource, IListItem } from "./ds";
@@ -8,12 +9,21 @@ import { InstallationModal } from "./install";
 import { Security } from "./security";
 import Strings from "./strings";
 
+// Items to view
+enum ItemsToShow {
+    ShowAll = 0,
+    Approved = 1,
+    NeedsApproval = 2,
+    NotPublished = 3
+}
+
+
 /**
  * Main Application
  */
 export class App {
     private _dashboard: Dashboard = null;
-    private _requiresApprovalFl: boolean = false;
+    private _currentView: number = ItemsToShow.ShowAll;
 
     // Constructor
     constructor(el: HTMLElement) {
@@ -22,14 +32,34 @@ export class App {
     }
 
     // Refreshes the dashboard
-    private refresh() {
-        // See if this is an admin
-        if (Security.IsAdmin) {
-            // Refresh the items
-            this._dashboard.refresh(this._requiresApprovalFl ? DataSource.RequiresApprovalItems : DataSource.List.Items);
-        } else {
-            // Refresh the items
-            this._dashboard.refresh(DataSource.ApprovedItems);
+    private refresh(view: ItemsToShow) {
+        // Set the current view
+        this._currentView = view;
+
+        // See what items to show
+        switch (view) {
+            case ItemsToShow.Approved:
+                // Show the approved items
+                this._dashboard.refresh(DataSource.ApprovedItems);
+                break;
+            case ItemsToShow.NotPublished:
+                // Show the items that have been reviewed
+                this._dashboard.refresh(DataSource.NotPublishedItems);
+                break;
+            case ItemsToShow.NeedsApproval:
+                // Show the items that need to be reviewed
+                this._dashboard.refresh(DataSource.NeedsApprovalItems);
+                break;
+            default:
+                // See if this is an admin
+                if (Security.IsAdmin) {
+                    // Show all the items
+                    this._dashboard.refresh(DataSource.List.Items);
+                } else {
+                    // Show only the approved items
+                    this._dashboard.refresh(DataSource.ApprovedItems);
+                }
+                break;
         }
     }
 
@@ -130,17 +160,39 @@ export class App {
                     {
                         isButton: true,
                         className: "btn-icon btn-outline-light me-2 p-2 py-1",
-                        text: "Needs Approval",
-                        onClick: (item, ev) => {
-                            // Flip the flag
-                            this._requiresApprovalFl = !this._requiresApprovalFl;
-
-                            // Update the button text
-                            (ev.target as HTMLElement).innerHTML = this._requiresApprovalFl ? "Show All" : "Needs Approval";
-
-                            // Refresh the items
-                            this.refresh();
-                        }
+                        iconSize: 22,
+                        iconType: funnel,
+                        text: "View Items",
+                        items: [
+                            {
+                                text: "Show All",
+                                onClick: (item, ev) => {
+                                    // Refresh the items
+                                    this.refresh(ItemsToShow.ShowAll);
+                                }
+                            },
+                            {
+                                text: "Approved",
+                                onClick: (item, ev) => {
+                                    // Refresh the items
+                                    this.refresh(ItemsToShow.Approved);
+                                }
+                            },
+                            {
+                                text: "Needs Approval",
+                                onClick: (item, ev) => {
+                                    // Refresh the items
+                                    this.refresh(ItemsToShow.NeedsApproval);
+                                }
+                            },
+                            {
+                                text: "Not Published",
+                                onClick: (item, ev) => {
+                                    // Refresh the items
+                                    this.refresh(ItemsToShow.NotPublished);
+                                }
+                            }
+                        ]
                     }
                 ] : null,
                 onRendering: props => {
@@ -280,7 +332,7 @@ export class App {
                                             // Refresh the data source
                                             DataSource.refresh().then(() => {
                                                 // Refresh the app
-                                                this.refresh();
+                                                this.refresh(this._currentView);
 
                                                 // Close the loading dialog
                                                 LoadingDialog.hide();
