@@ -24,6 +24,7 @@ enum ItemsToShow {
 export class App {
     private _dashboard: Dashboard = null;
     private _currentView: number = ItemsToShow.ShowAll;
+    private _elNavigation: HTMLElement = null;
 
     // Constructor
     constructor(el: HTMLElement) {
@@ -209,6 +210,10 @@ export class App {
                     navIcon.appendChild(clipboard(32, 32));
                     navIcon.appendChild(navText);
                     props.brand = navIcon;
+                },
+                onRendered: el => {
+                    // Save a reference to the navigation
+                    this._elNavigation = el;
                 }
             },
             footer: {
@@ -279,6 +284,10 @@ export class App {
                 onCardRendered: (el) => {
                     // Add the class names for making the heights match
                     el.classList.add("h-100");
+                },
+                onPaginationClick: () => {
+                    // Focus on the navigation element
+                    this._elNavigation.scrollIntoView();
                 }
             }
         });
