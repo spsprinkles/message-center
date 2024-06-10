@@ -269,8 +269,8 @@ export class App {
                     // Render the details button
                     this.renderDetailsButton(el, item);
 
-                    // Render the approval button
-                    this.renderApprovalButton(el, item);
+                    // Render the review button
+                    this.renderReviewButton(el, item);
                 },
                 onColumnRendered: (el) => {
                     // Add spacing for the top of the card
@@ -284,8 +284,8 @@ export class App {
         });
     }
 
-    // Renders the approval button
-    private renderApprovalButton(el: HTMLElement, item: IListItem) {
+    // Renders the review button
+    private renderReviewButton(el: HTMLElement, item: IListItem) {
         // Ensure this is an admin
         if (!Security.IsAdmin) { return; }
 
@@ -295,49 +295,106 @@ export class App {
         // Add a button for additional details
         Components.Tooltip({
             el,
-            content: "Click to approve the item and make it available to all users.",
+            content: "Click to review the item for visibility.",
             btnProps: {
                 className: "ms-2",
-                text: "Approve",
+                text: "Review",
                 type: Components.ButtonTypes.OutlineSuccess,
                 isSmall: true,
                 onClick: () => {
                     // Display an approval modal
                     Modal.clear();
-                    Modal.setHeader("Approve Item");
+                    Modal.setHeader("Review Item");
 
-                    // Render the body
-                    Modal.setBody("Approving this item will make it visible to all users. Are you sure you want to do this?");
+                    // Render the form
+                    let form = Components.Form({
+                        el: Modal.BodyElement,
+                        value: item,
+                        controls: [
+                            {
+                                name: "Approve",
+                                label: "Approve",
+                                type: Components.FormControlTypes.Switch,
+                                description: "Approves the item for all users to see.",
+                                value: false,
+                                onChange: (item) => {
+                                    if (item) {
+                                        form.getControl("Status").hide();
+                                        form.getControl("Notes").hide();
+                                        btnSubmit.setText("Approve");
+                                    } else {
+                                        form.getControl("Status").show();
+                                        form.getControl("Notes").show();
+                                        btnSubmit.setText("Update");
+                                    }
+                                }
+                            } as Components.IFormControlPropsSwitch,
+                            {
+                                name: "Status",
+                                label: "Status",
+                                type: Components.FormControlTypes.Dropdown,
+                                description: "The reason why the item is not being published.",
+                                items: DataSource.StatusItems
+                            } as Components.IFormControlPropsDropdown,
+                            {
+                                name: "Notes",
+                                label: "Notes",
+                                description: "Details for why an item should not be published.",
+                                type: Components.FormControlTypes.TextArea
+                            }
+                        ]
+                    });
 
                     // Render the footer
+                    let btnSubmit: Components.IButton = null;
                     Components.TooltipGroup({
                         el: Modal.FooterElement,
                         tooltips: [
                             {
                                 content: "Click to approve the item and make it available to all users.",
                                 btnProps: {
-                                    text: "Approve",
+                                    assignTo: btn => { btnSubmit = btn; },
+                                    text: "Update",
                                     type: Components.ButtonTypes.OutlineSuccess,
                                     onClick: () => {
                                         // Hide the modal
                                         Modal.hide();
 
                                         // Show a loading dialog
-                                        LoadingDialog.setHeader("Approving Item");
+                                        LoadingDialog.setHeader("Saving Item");
                                         LoadingDialog.setBody("This will close after the item has been updated...");
                                         LoadingDialog.show();
 
-                                        // Update the item
-                                        item.update({ IsApproved: true }).execute(() => {
-                                            // Refresh the data source
-                                            DataSource.refresh().then(() => {
-                                                // Refresh the app
-                                                this.refresh(this._currentView);
+                                        // Get the form values and see if we are approving the item
+                                        let values = form.getValues();
+                                        if (values["Approve"]) {
+                                            // Update the item
+                                            item.update({ IsApproved: true }).execute(() => {
+                                                // Refresh the data source
+                                                DataSource.refresh().then(() => {
+                                                    // Refresh the app
+                                                    this.refresh(this._currentView);
 
-                                                // Close the loading dialog
-                                                LoadingDialog.hide();
+                                                    // Close the loading dialog
+                                                    LoadingDialog.hide();
+                                                });
                                             });
-                                        });
+                                        } else {
+                                            // Update the item
+                                            item.update({
+                                                Status: values["Status"].text,
+                                                Notes: values["Notes"]
+                                            }).execute(() => {
+                                                // Refresh the data source
+                                                DataSource.refresh().then(() => {
+                                                    // Refresh the app
+                                                    this.refresh(this._currentView);
+
+                                                    // Close the loading dialog
+                                                    LoadingDialog.hide();
+                                                });
+                                            });
+                                        }
                                     }
                                 }
                             }

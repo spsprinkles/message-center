@@ -102,6 +102,9 @@ export class DataSource {
                     // Load the filters
                     this.loadFilters();
 
+                    // Load the status items
+                    this.loadStatus();
+
                     // Resolve the request
                     resolve();
                 },
@@ -211,5 +214,25 @@ export class DataSource {
             // Refresh the data
             DataSource.List.refresh().then(resolve, reject);
         });
+    }
+
+    // Status choice options
+    private static _statusItems: Components.IDropdownItem[] = null;
+    static get StatusItems(): Components.IDropdownItem[] { return this._statusItems; }
+    private static loadStatus() {
+        // Get the status field
+        let fldStatus = this.List.getField("Status") as Types.SP.FieldChoice;
+
+        // Clear the items
+        this._statusItems = [];
+
+        // Parse the choices
+        for (let i = 0; i < fldStatus.Choices.results.length; i++) {
+            // Append the choice
+            this._statusItems.push({
+                text: fldStatus.Choices.results[i],
+                value: fldStatus.Choices.results[i]
+            });
+        }
     }
 }
