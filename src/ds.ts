@@ -72,18 +72,21 @@ export class DataSource {
     }
 
     // Loads the list data
-    private static _approvedItems: IListItem[] = null;
-    static get ApprovedItems(): IListItem[] { return this._approvedItems; }
-    private static _requiresApprovalItems: IListItem[] = null;
-    static get RequiresApprovalItems(): IListItem[] { return this._requiresApprovalItems; }
+    private static _items: { [key: string]: IListItem[] } = null;
+    static get ApprovedItems(): IListItem[] { return this._items.Approved; }
+    static get NeedsApprovalItems(): IListItem[] { return this._items.NeedsApproval; }
+    static get NotPublishedItems(): IListItem[] { return this._items.NotPublished; }
     private static _list: List<IListItem>;
     static get List(): List<IListItem> { return this._list; }
     static load(): PromiseLike<void> {
         // Return a promise
         return new Promise((resolve, reject) => {
             // Clear the items
-            this._approvedItems = [];
-            this._requiresApprovalItems = [];
+            this._items = {
+                Approved: [],
+                NeedsApproval: [],
+                NotPublished: []
+            }
 
             // Initialize the list
             this._list = new List<IListItem>({
@@ -109,9 +112,15 @@ export class DataSource {
 
                     // See if this item is approved
                     if (item.IsApproved) {
-                        this._approvedItems.push(item);
-                    } else {
-                        this._requiresApprovalItems.push(item);
+                        this._items.Approved.push(item);
+                    }
+                    // Else, see if there is a status set
+                    else if (item.Status) {
+                        this._items.NotPublished.push(item);
+                    }
+                    // Else, this item hasn't been reviewed
+                    else {
+                        this._items.NeedsApproval.push(item);
                     }
                 }
             });
@@ -193,8 +202,11 @@ export class DataSource {
         // Return a promise
         return new Promise((resolve, reject) => {
             // Clear the items
-            this._approvedItems = [];
-            this._requiresApprovalItems = [];
+            this._items = {
+                Approved: [],
+                NeedsApproval: [],
+                NotPublished: []
+            }
 
             // Refresh the data
             DataSource.List.refresh().then(resolve, reject);
