@@ -24,6 +24,7 @@ enum ItemsToShow {
 export class App {
     private _dashboard: Dashboard = null;
     private _currentView: number = ItemsToShow.ShowAll;
+    private _elNavigation: HTMLElement = null;
 
     // Constructor
     constructor(el: HTMLElement) {
@@ -209,6 +210,10 @@ export class App {
                     navIcon.appendChild(clipboard(32, 32));
                     navIcon.appendChild(navText);
                     props.brand = navIcon;
+                },
+                onRendered: el => {
+                    // Save a reference to the navigation
+                    this._elNavigation = el;
                 }
             },
             footer: {
@@ -279,6 +284,10 @@ export class App {
                 onCardRendered: (el) => {
                     // Add the class names for making the heights match
                     el.classList.add("h-100");
+                },
+                onPaginationClick: () => {
+                    // Focus on the navigation element
+                    this._elNavigation.scrollIntoView();
                 }
             }
         });
@@ -299,7 +308,7 @@ export class App {
             btnProps: {
                 className: "ms-2",
                 text: "Review",
-                type: Components.ButtonTypes.OutlineSuccess,
+                type: Components.ButtonTypes.OutlinePrimary,
                 isSmall: true,
                 onClick: () => {
                     // Display an approval modal
@@ -355,7 +364,7 @@ export class App {
                                 btnProps: {
                                     assignTo: btn => { btnSubmit = btn; },
                                     text: "Update",
-                                    type: Components.ButtonTypes.OutlineSuccess,
+                                    type: Components.ButtonTypes.OutlinePrimary,
                                     onClick: () => {
                                         // Hide the modal
                                         Modal.hide();
@@ -369,7 +378,11 @@ export class App {
                                         let values = form.getValues();
                                         if (values["Approve"]) {
                                             // Update the item
-                                            item.update({ IsApproved: true }).execute(() => {
+                                            item.update({
+                                                IsApproved: true,
+                                                Status: "",
+                                                Notes: ""
+                                            }).execute(() => {
                                                 // Refresh the data source
                                                 DataSource.refresh().then(() => {
                                                     // Refresh the app
@@ -418,7 +431,7 @@ export class App {
                 content: Strings.MoreInfoTooltip,
                 btnProps: {
                     text: Strings.MoreInfo,
-                    type: Components.ButtonTypes.OutlineSuccess,
+                    type: Components.ButtonTypes.OutlinePrimary,
                     isSmall: true,
                     onClick: () => {
                         // Clear the canvas
