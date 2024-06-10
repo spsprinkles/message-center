@@ -299,7 +299,7 @@ export class App {
             btnProps: {
                 className: "ms-2",
                 text: "Review",
-                type: Components.ButtonTypes.OutlineSuccess,
+                type: Components.ButtonTypes.OutlinePrimary,
                 isSmall: true,
                 onClick: () => {
                     // Display an approval modal
@@ -355,7 +355,7 @@ export class App {
                                 btnProps: {
                                     assignTo: btn => { btnSubmit = btn; },
                                     text: "Update",
-                                    type: Components.ButtonTypes.OutlineSuccess,
+                                    type: Components.ButtonTypes.OutlinePrimary,
                                     onClick: () => {
                                         // Hide the modal
                                         Modal.hide();
@@ -422,7 +422,7 @@ export class App {
                 content: Strings.MoreInfoTooltip,
                 btnProps: {
                     text: Strings.MoreInfo,
-                    type: Components.ButtonTypes.OutlineSuccess,
+                    type: Components.ButtonTypes.OutlinePrimary,
                     isSmall: true,
                     onClick: () => {
                         // Clear the canvas
