@@ -27,9 +27,16 @@ export class App {
     private _elNavigation: HTMLElement = null;
 
     // Constructor
-    constructor(el: HTMLElement) {
+    constructor(el: HTMLElement, itemId?: number) {
         // Render the dashboard
         this.render(el);
+
+        // See if we are displaying an item
+        let item = itemId > 0 ? DataSource.List.getItem(itemId) : null;
+        if (item) {
+            // Show the item
+            this.showMoreInfo(item);
+        }
     }
 
     // Refreshes the dashboard
@@ -276,6 +283,9 @@ export class App {
 
                     // Render the review button
                     this.renderReviewButton(el, item);
+
+                    // Render the link button
+                    this.renderLinkButton(el, item);
                 },
                 onColumnRendered: (el) => {
                     // Add spacing for the top of the card
@@ -288,6 +298,82 @@ export class App {
                 onPaginationClick: () => {
                     // Focus on the navigation element
                     this._elNavigation.scrollIntoView();
+                }
+            }
+        });
+    }
+
+    // Renders the details button
+    private renderDetailsButton(el: HTMLElement, item: IListItem) {
+        // Ensure content exists
+        if (item.Content) {
+            // Add a button for additional details
+            Components.Tooltip({
+                el,
+                content: Strings.MoreInfoTooltip,
+                btnProps: {
+                    text: Strings.MoreInfo,
+                    type: Components.ButtonTypes.OutlinePrimary,
+                    isSmall: true,
+                    onClick: () => {
+                        // Show the information for this item
+                        this.showMoreInfo(item);
+                    }
+                }
+            });
+        }
+    }
+
+    // Renders the link button
+    private renderLinkButton(el: HTMLElement, item: IListItem) {
+        // Add a button for additional details
+        Components.Tooltip({
+            el,
+            content: "Generates a link to this item.",
+            btnProps: {
+                className: "ms-2",
+                text: "Link",
+                type: Components.ButtonTypes.OutlinePrimary,
+                isSmall: true,
+                onClick: () => {
+                    // Clear the modal
+                    Modal.clear();
+
+                    // Set the header
+                    Modal.setHeader("Generate Link");
+
+                    // Generate the url for this item
+                    let linkUrl = `${document.location.origin}${document.location.pathname}?item-id=${item.Id}`;
+
+                    // Copy it to the clipboard
+                    navigator.clipboard.writeText(linkUrl);
+
+                    // Set the body
+                    Components.Form({
+                        el: Modal.BodyElement,
+                        controls: [
+                            {
+                                label: "Item Url:",
+                                type: Components.FormControlTypes.Readonly,
+                                description: "The url has been automatically copied to your clipboard.",
+                                value: linkUrl
+                            }
+                        ]
+                    });
+
+                    // Render the close button
+                    Components.Button({
+                        el: Modal.FooterElement,
+                        text: "Close",
+                        type: Components.ButtonTypes.OutlineSecondary,
+                        onClick: () => {
+                            // Close the modal
+                            Modal.hide();
+                        }
+                    });
+
+                    // Show the form
+                    Modal.show();
                 }
             }
         });
@@ -421,121 +507,6 @@ export class App {
         });
     }
 
-    // Renders the details button
-    private renderDetailsButton(el: HTMLElement, item: IListItem) {
-        // Ensure content exists
-        if (item.Content) {
-            // Add a button for additional details
-            Components.Tooltip({
-                el,
-                content: Strings.MoreInfoTooltip,
-                btnProps: {
-                    text: Strings.MoreInfo,
-                    type: Components.ButtonTypes.OutlinePrimary,
-                    isSmall: true,
-                    onClick: () => {
-                        // Clear the canvas
-                        CanvasForm.clear();
-
-                        // Set the properties
-                        CanvasForm.setSize(Components.OffcanvasSize.Medium3);
-                        CanvasForm.setType(Components.OffcanvasTypes.End);
-
-                        // Set the header
-                        CanvasForm.setHeader(item.Title);
-
-                        // Make the headers bold
-                        let content = item.Content
-                            .replace(/\[/g, "<b>").replace(/\]/g, "</b>");
-
-                        // Parse the tags
-                        let badges = [];
-                        let tags = item.Tags?.results || [];
-                        for (let i = 0; i < tags.length; i++) {
-                            badges.push(Components.Badge({
-                                className: "text-bg-secondary",
-                                content: tags[i]
-                            }).el.outerHTML);
-                        }
-
-                        // Get the icons
-                        let el = document.createElement("div");
-                        this.renderIcons(el, item);
-
-                        // Create the summary
-                        let summary = Components.Alert({
-                            header: "Summary",
-                            content: item.Summary,
-                            type: Components.AlertTypes.Secondary
-                        });
-
-                        // Set the published date
-                        let publishedDate = "";
-                        if (item.PublishedDate) {
-                            // Format the date/time
-                            publishedDate = moment.utc(item.PublishedDate).tz(Strings.TimeZone).format(Strings.TimeFormat);
-                        }
-
-                        // Set the roadmap links
-                        let roadmapLinks = "";
-                        let roadmapIds = (item.RoadMapId || "").split(',');
-                        for (let i = 0; i < roadmapIds.length; i++) {
-                            // Ensure the id exists
-                            let roadmapId = roadmapIds[i].trim();
-                            if (roadmapId.length > 0) {
-                                // Add a space for multiple links
-                                i > 0 ? roadmapLinks += " " : null;
-
-                                // Add the link
-                                roadmapLinks += `<a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${roadmapId}">${roadmapId}</a>`;
-                            }
-                        }
-
-                        // Render the body
-                        CanvasForm.BodyElement.innerHTML = `
-                            <div class="row">
-                                <div class="col-9">
-                                    ${summary.el.outerHTML}
-                                    ${content}
-                                </div>
-                                <div class="col-3">
-                                    <div class="fs-6">Service:</div>
-                                    <div class="mb-3">${el.innerHTML}</div>
-                                    <div class="fs-6">Platform:</div>
-                                    <div class="mb-3">${item.Platform || ""}</div>
-                                    <div class="fs-6">Message ID:</div>
-                                    <div class="mb-3 fw-semibold">${item.MessageId || ""}</div>
-                                    <div class="fs-6">Roadmap ID:</div>
-                                    <div class="mb-3">${roadmapLinks}</div>
-                                    <div class="fs-6">Published:</div>
-                                    <div class="mb-3">${publishedDate}</div>
-                                    <div class="fs-6">Tag(s):</div>
-                                    <div class="mb-3">${badges.join('\n')}</div>
-                                </div>
-                            </div>
-                            <div class="footer d-flex justify-content-end">
-                            </div>
-                        `;
-
-                        // Render the close button
-                        Components.Button({
-                            el: CanvasForm.BodyElement.querySelector(".footer"),
-                            text: "Close",
-                            type: Components.ButtonTypes.OutlineSecondary,
-                            onClick: () => {
-                                // Close the canvas
-                                CanvasForm.hide();
-                            }
-                        });
-
-                        // Show the form
-                        CanvasForm.show();
-                    }
-                }
-            });
-        }
-    }
-
     // Renders the icons for the item
     private renderIcons(el: HTMLElement, item: IListItem) {
         // Define the height/width of the icons
@@ -646,5 +617,106 @@ export class App {
                 el.appendChild(elIcon);
             }
         }
+    }
+
+    // Shows more information on the item
+    private showMoreInfo(item: IListItem) {
+        // Clear the canvas
+        CanvasForm.clear();
+
+        // Set the properties
+        CanvasForm.setSize(Components.OffcanvasSize.Medium3);
+        CanvasForm.setType(Components.OffcanvasTypes.End);
+
+        // Set the header
+        CanvasForm.setHeader(item.Title);
+
+        // Make the headers bold
+        let content = item.Content
+            .replace(/\[/g, "<b>").replace(/\]/g, "</b>");
+
+        // Parse the tags
+        let badges = [];
+        let tags = item.Tags?.results || [];
+        for (let i = 0; i < tags.length; i++) {
+            badges.push(Components.Badge({
+                className: "text-bg-secondary",
+                content: tags[i]
+            }).el.outerHTML);
+        }
+
+        // Get the icons
+        let el = document.createElement("div");
+        this.renderIcons(el, item);
+
+        // Create the summary
+        let summary = Components.Alert({
+            header: "Summary",
+            content: item.Summary,
+            type: Components.AlertTypes.Secondary
+        });
+
+        // Set the published date
+        let publishedDate = "";
+        if (item.PublishedDate) {
+            // Format the date/time
+            publishedDate = moment.utc(item.PublishedDate).tz(Strings.TimeZone).format(Strings.TimeFormat);
+        }
+
+        // Set the roadmap links
+        let roadmapLinks = "";
+        let roadmapIds = (item.RoadMapId || "").split(',');
+        for (let i = 0; i < roadmapIds.length; i++) {
+            // Ensure the id exists
+            let roadmapId = roadmapIds[i].trim();
+            if (roadmapId.length > 0) {
+                // Add a space for multiple links
+                i > 0 ? roadmapLinks += " " : null;
+
+                // Add the link
+                roadmapLinks += `<a target="_blank" href="https://www.microsoft.com/en-US/microsoft-365/roadmap?filters=&searchterms=${roadmapId}">${roadmapId}</a>`;
+            }
+        }
+
+        // Render the body
+        CanvasForm.BodyElement.innerHTML = `
+            <div class="row">
+                <div class="col-9">
+                    ${summary.el.outerHTML}
+                    ${content}
+                </div>
+                <div class="col-3">
+                    <div class="fs-6">Service:</div>
+                    <div class="mb-3">${el.innerHTML}</div>
+                    <div class="fs-6">Platform:</div>
+                    <div class="mb-3">${item.Platform || ""}</div>
+                    <div class="fs-6">Message ID:</div>
+                    <div class="mb-3 fw-semibold">${item.MessageId || ""}</div>
+                    <div class="fs-6">Roadmap ID:</div>
+                    <div class="mb-3">${roadmapLinks}</div>
+                    <div class="fs-6">Published:</div>
+                    <div class="mb-3">${publishedDate}</div>
+                    <div class="fs-6">Tag(s):</div>
+                    <div class="mb-3">${badges.join('\n')}</div>
+                </div>
+            </div>
+            <div class="footer d-flex justify-content-end">
+            </div>
+        `;
+
+        // Render the close button
+        Components.Button({
+            el: CanvasForm.BodyElement.querySelector(".footer"),
+            text: "Close",
+            type: Components.ButtonTypes.OutlineSecondary,
+            onClick: () => {
+                // Close the canvas
+                CanvasForm.hide();
+            }
+        });
+
+        // Show the form
+        CanvasForm.show();
+
     }
 }
