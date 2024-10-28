@@ -30,7 +30,7 @@ const GlobalVariable = {
                 // Load the current theme and apply it to the components
                 ThemeManager.load(true).then(() => {
                     // Create the application
-                    new App(props.el);
+                    new App(props.el, DataSource.getItemIdFromQS());
                 });
             },
 
