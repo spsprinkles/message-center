@@ -112,7 +112,7 @@ export class DataSource {
                 webUrl: Strings.SourceUrl,
                 itemQuery: {
                     GetAllItems: true,
-                    OrderBy: ["MessageId desc"],
+                    OrderBy: [Strings.SortField + " desc"],
                     Top: 5000
                 },
                 onInitError: reject,

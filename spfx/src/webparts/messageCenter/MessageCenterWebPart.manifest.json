@@ -38,7 +38,8 @@
         "tilePageSize": 9,
         "timeFormat": "YYYY-MMM-DD HH:mm:ss zz",
         "timeZone": "America/New_York",
-        "title": "Message Center"
+        "title": "Message Center",
+        "sortField": "Modified"
       }
     }
   ]

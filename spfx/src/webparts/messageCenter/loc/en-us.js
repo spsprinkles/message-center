@@ -13,6 +13,8 @@ define([], function() {
     "TimeZoneFieldLabel": "Time zone format",
     "TitleFieldDescription": "The text shown in the top-left of the webpart",
     "TitleFieldLabel": "App Title",
+    //"SortFieldDescription": "Sort items in descending order by this field",
+    "SortFieldLabel": "Sort Field",
     "WebUrlFieldDescription": "The relative web URL that contains the Service Health list",
     "WebUrlFieldLabel": "Web Url",
     "AppLocalEnvironmentSharePoint": "The app is running on your local environment as SharePoint web part",

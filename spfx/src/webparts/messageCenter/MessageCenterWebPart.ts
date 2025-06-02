@@ -19,6 +19,7 @@ export interface IMessageCenterWebPartProps {
   timeZone: string;
   title: string;
   webUrl: string;
+  sortField: string
 }
 
 // Reference the solution
@@ -151,6 +152,15 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
                   label: strings.TitleFieldLabel,
                   description: strings.TitleFieldDescription
                 }),
+                PropertyPaneDropdown('sortField', {
+                  label: strings.SortFieldLabel,
+                  selectedKey: 'MessageId', //for the existing deployments out there
+                  options: [
+                    { key: 'MessageId', text: 'Message Id' },
+                    { key: 'Created', text: 'Created Date' },
+                    { key: 'Modified', text: 'Modified Date' }
+                  ]
+                })
               ]
             }
           ]

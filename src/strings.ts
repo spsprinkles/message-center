@@ -15,6 +15,7 @@ export interface IAppProps {
     timeZone?: string;
     title?: string;
     sourceUrl?: string;
+    sortField?: string;
 }
 
 // Sets the context information
@@ -47,6 +48,9 @@ export const setContext = (props: IAppProps) => {
 
     // Update the ProjectName from SPFx title field
     props.title ? Strings.ProjectName = props.title : null;
+
+    // Update the SortField from SPFx title field
+    props.sortField ? Strings.SortField = props.sortField : null;
 }
 
 /**
@@ -68,6 +72,7 @@ const Strings = {
     TilePageSize: 9,
     TimeFormat: "YYYY-MMM-DD HH:mm:ss zz",
     TimeZone: "America/New_York",
-    Version: "0.0.1"
+    SortField: "Modified",
+    Version: "0.0.3"
 };
 export default Strings;
