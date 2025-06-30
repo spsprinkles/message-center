@@ -41,6 +41,7 @@ declare const MessageCenter: {
     timeFormat?: string;
     timeZone?: string;
     title?: string;
+    sortField?: string;
     sourceUrl?: string;
   }) => void;
   moreInfoTooltip: string;
@@ -49,6 +50,7 @@ declare const MessageCenter: {
   timeFormat: string;
   timeZone: string;
   title: string;
+  sortField: string;
   updateTheme: (currentTheme: Partial<IReadonlyTheme>) => void;
 };
 
@@ -71,6 +73,7 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     if (!this.properties.timeFormat) { this.properties.timeFormat = MessageCenter.timeFormat; }
     if (!this.properties.timeZone) { this.properties.timeZone = MessageCenter.timeZone; }
     if (!this.properties.title) { this.properties.title = MessageCenter.title; }
+    if (!this.properties.sortField) { this.properties.title = MessageCenter.sortField; }
     if (!this.properties.webUrl) { this.properties.webUrl = this.context.pageContext.web.serverRelativeUrl; }
 
     // Render the application
@@ -87,6 +90,7 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
       timeFormat: this.properties.timeFormat,
       timeZone: this.properties.timeZone,
       title: this.properties.title,
+      sortField: this.properties.sortField,
       sourceUrl: this.properties.webUrl
     });
 
