@@ -110,7 +110,12 @@ export const Configuration = Helper.SPConfig({
                     fillInChoice: true,
                     multi: true,
                     choices: []
-                } as Helper.IFieldInfoChoice
+                } as Helper.IFieldInfoChoice,
+                {
+                    name: "ItemEnd",
+                    title: "ItemEnd",
+                    type: Helper.SPCfgFieldType.Date
+                }
             ],
             ViewInformation: [
                 {
