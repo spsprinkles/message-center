@@ -3,7 +3,7 @@
   "solution": {
     "name": "message-center",
     "id": "22c60fcb-b8cd-4e9e-98bf-f2e15bd4acfc",
-    "version": "0.0.3.0",
+    "version": "0.0.3.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,

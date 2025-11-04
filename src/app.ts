@@ -294,10 +294,6 @@ export class App {
                 onCardRendered: (el) => {
                     // Add the class names for making the heights match
                     el.classList.add("h-100");
-                },
-                onPaginationClick: () => {
-                    // Focus on the navigation element
-                    this._elNavigation.scrollIntoView();
                 }
             }
         });
