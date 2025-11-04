@@ -39,6 +39,11 @@ export const Configuration = Helper.SPConfig({
                     defaultValue: "0"
                 },
                 {
+                    name: "ItemEnd",
+                    title: "ItemEnd",
+                    type: Helper.SPCfgFieldType.Date
+                },
+                {
                     name: "Message",
                     title: "Message",
                     type: Helper.SPCfgFieldType.Note,
@@ -110,12 +115,7 @@ export const Configuration = Helper.SPConfig({
                     fillInChoice: true,
                     multi: true,
                     choices: []
-                } as Helper.IFieldInfoChoice,
-                {
-                    name: "ItemEnd",
-                    title: "ItemEnd",
-                    type: Helper.SPCfgFieldType.Date
-                }
+                } as Helper.IFieldInfoChoice
             ],
             ViewInformation: [
                 {

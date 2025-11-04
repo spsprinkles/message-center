@@ -13,13 +13,13 @@ export interface IMessageCenterWebPartProps {
   listName: string;
   moreInfo: string;
   moreInfoTooltip: string;
+  sortField: string
   tileColumnSize: number;
   tilePageSize: number;
   timeFormat: string;
   timeZone: string;
   title: string;
   webUrl: string;
-  sortField: string
 }
 
 // Reference the solution
@@ -36,21 +36,21 @@ declare const MessageCenter: {
     listName?: string;
     moreInfo?: string;
     moreInfoTooltip?: string;
+    sortField?: string;
+    sourceUrl?: string;
     tileColumnSize?: number;
     tilePageSize?: number;
     timeFormat?: string;
     timeZone?: string;
     title?: string;
-    sortField?: string;
-    sourceUrl?: string;
   }) => void;
   moreInfoTooltip: string;
+  sortField: string;
   tileColumnSize: number;
   tilePageSize: number;
   timeFormat: string;
   timeZone: string;
   title: string;
-  sortField: string;
   updateTheme: (currentTheme: Partial<IReadonlyTheme>) => void;
 };
 
@@ -68,12 +68,12 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     // Set the default property values
     if (!this.properties.listName) { this.properties.listName = MessageCenter.listName; }
     if (!this.properties.moreInfoTooltip) { this.properties.moreInfoTooltip = MessageCenter.moreInfoTooltip; }
+    if (!this.properties.sortField) { this.properties.sortField = MessageCenter.sortField; }
     if (!this.properties.tileColumnSize) { this.properties.tileColumnSize = MessageCenter.tileColumnSize; }
     if (!this.properties.tilePageSize) { this.properties.tilePageSize = MessageCenter.tilePageSize; }
     if (!this.properties.timeFormat) { this.properties.timeFormat = MessageCenter.timeFormat; }
     if (!this.properties.timeZone) { this.properties.timeZone = MessageCenter.timeZone; }
     if (!this.properties.title) { this.properties.title = MessageCenter.title; }
-    if (!this.properties.sortField) { this.properties.title = MessageCenter.sortField; }
     if (!this.properties.webUrl) { this.properties.webUrl = this.context.pageContext.web.serverRelativeUrl; }
 
     // Render the application
@@ -85,13 +85,13 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
       listName: this.properties.listName,
       moreInfo: this.properties.moreInfo,
       moreInfoTooltip: this.properties.moreInfoTooltip,
+      sortField: this.properties.sortField,
+      sourceUrl: this.properties.webUrl,
       tileColumnSize: this.properties.tileColumnSize,
       tilePageSize: this.properties.tilePageSize,
       timeFormat: this.properties.timeFormat,
       timeZone: this.properties.timeZone,
-      title: this.properties.title,
-      sortField: this.properties.sortField,
-      sourceUrl: this.properties.webUrl
+      title: this.properties.title
     });
 
     // Set the flag
