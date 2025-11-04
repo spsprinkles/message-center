@@ -39,6 +39,11 @@ export const Configuration = Helper.SPConfig({
                     defaultValue: "0"
                 },
                 {
+                    name: "ItemEnd",
+                    title: "ItemEnd",
+                    type: Helper.SPCfgFieldType.Date
+                },
+                {
                     name: "Message",
                     title: "Message",
                     type: Helper.SPCfgFieldType.Note,

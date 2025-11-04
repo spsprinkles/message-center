@@ -13,6 +13,7 @@ export interface IMessageCenterWebPartProps {
   listName: string;
   moreInfo: string;
   moreInfoTooltip: string;
+  sortField: string
   tileColumnSize: number;
   tilePageSize: number;
   timeFormat: string;
@@ -35,14 +36,16 @@ declare const MessageCenter: {
     listName?: string;
     moreInfo?: string;
     moreInfoTooltip?: string;
+    sortField?: string;
+    sourceUrl?: string;
     tileColumnSize?: number;
     tilePageSize?: number;
     timeFormat?: string;
     timeZone?: string;
     title?: string;
-    sourceUrl?: string;
   }) => void;
   moreInfoTooltip: string;
+  sortField: string;
   tileColumnSize: number;
   tilePageSize: number;
   timeFormat: string;
@@ -65,6 +68,7 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
     // Set the default property values
     if (!this.properties.listName) { this.properties.listName = MessageCenter.listName; }
     if (!this.properties.moreInfoTooltip) { this.properties.moreInfoTooltip = MessageCenter.moreInfoTooltip; }
+    if (!this.properties.sortField) { this.properties.sortField = MessageCenter.sortField; }
     if (!this.properties.tileColumnSize) { this.properties.tileColumnSize = MessageCenter.tileColumnSize; }
     if (!this.properties.tilePageSize) { this.properties.tilePageSize = MessageCenter.tilePageSize; }
     if (!this.properties.timeFormat) { this.properties.timeFormat = MessageCenter.timeFormat; }
@@ -81,12 +85,13 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
       listName: this.properties.listName,
       moreInfo: this.properties.moreInfo,
       moreInfoTooltip: this.properties.moreInfoTooltip,
+      sortField: this.properties.sortField,
+      sourceUrl: this.properties.webUrl,
       tileColumnSize: this.properties.tileColumnSize,
       tilePageSize: this.properties.tilePageSize,
       timeFormat: this.properties.timeFormat,
       timeZone: this.properties.timeZone,
-      title: this.properties.title,
-      sourceUrl: this.properties.webUrl
+      title: this.properties.title
     });
 
     // Set the flag
@@ -151,6 +156,15 @@ export default class MessageCenterWebPart extends BaseClientSideWebPart<IMessage
                   label: strings.TitleFieldLabel,
                   description: strings.TitleFieldDescription
                 }),
+                PropertyPaneDropdown('sortField', {
+                  label: strings.SortFieldLabel,
+                  selectedKey: 'MessageId', //for the existing deployments out there
+                  options: [
+                    { key: 'MessageId', text: 'Message Id' },
+                    { key: 'Created', text: 'Created Date' },
+                    { key: 'Modified', text: 'Modified Date' }
+                  ]
+                })
               ]
             }
           ]

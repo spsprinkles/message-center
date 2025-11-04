@@ -9,12 +9,13 @@ export interface IAppProps {
     listName?: string;
     moreInfo?: string;
     moreInfoTooltip?: string;
+    sortField?: string;
+    sourceUrl?: string;
     tileColumnSize?: number;
     tilePageSize?: number;
     timeFormat?: string;
     timeZone?: string;
     title?: string;
-    sourceUrl?: string;
 }
 
 // Sets the context information
@@ -47,6 +48,9 @@ export const setContext = (props: IAppProps) => {
 
     // Update the ProjectName from SPFx title field
     props.title ? Strings.ProjectName = props.title : null;
+
+    // Update the SortField from SPFx title field
+    props.sortField ? Strings.SortField = props.sortField : null;
 }
 
 /**
@@ -63,11 +67,12 @@ const Strings = {
     MoreInfoTooltip: "Click to view additional details for this item.",
     ProjectName: "Message Center",
     ProjectDescription: "The Message Center app is a solution that reads service messages data from a SharePoint list and presents it to all users with an intuitive interface.",
+    SortField: "Modified",
     SourceUrl: ContextInfo.webServerRelativeUrl,
     TileColumnSize: 3,
     TilePageSize: 9,
     TimeFormat: "YYYY-MMM-DD HH:mm:ss zz",
     TimeZone: "America/New_York",
-    Version: "0.0.1"
+    Version: "0.0.3"
 };
 export default Strings;

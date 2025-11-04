@@ -12,6 +12,8 @@ declare interface IMessageCenterWebPartStrings {
   TimeZoneFieldLabel: string;
   TitleFieldDescription: string;
   TitleFieldLabel: string;
+  //SortFieldDescription: string;
+  SortFieldLabel: string;
   WebUrlFieldDescription: string;
   WebUrlFieldLabel: string;
   AppLocalEnvironmentSharePoint: string;
