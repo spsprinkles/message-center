@@ -342,7 +342,10 @@ export class App {
                     let linkUrl = `${document.location.origin}${document.location.pathname}?item-id=${item.Id}`;
 
                     // Copy it to the clipboard
-                    navigator.clipboard.writeText(linkUrl);
+                    navigator.clipboard.write([new ClipboardItem({
+                        "text/html": new Blob([`<a href="${linkUrl}">${item.Title}</a>`], { type: "text/html" }),
+                        "text/plain": `${item.Title}: ${linkUrl}`
+                    })]);
 
                     // Set the body
                     Components.Form({
