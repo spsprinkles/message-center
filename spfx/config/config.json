@@ -14,7 +14,7 @@
   "externals": {
     "main-lib": {
       "globalName": "main-lib",
-      "path": "../dist/message-center.js"
+      "path": "../dist/message-center.min.js"
     }
   },
   "localizedResources": {
