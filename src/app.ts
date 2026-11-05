@@ -288,19 +288,17 @@ export class App {
         });
 
         // Add the tiles in batches of 100
+        let idx = 0;
         let loopId = setTimeout(() => {
-            let idx = 0;
-            while (idx < DataSource.Items.length) {
-                let items = [];
-                for (let i = 0; i < 100 && idx < DataSource.Items.length; i++) {
-                    // Add the item to the array and increment the index
-                    items.push(DataSource.Items[idx+i]);
-                    idx++;
-                }
-
-                // Add the tiles
-                this._dashboard.addTiles(items);
+            let items = [];
+            for (let i = 0; i < 100 && idx < DataSource.Items.length; i++) {
+                // Add the item to the array and increment the index
+                items.push(DataSource.Items[idx + i]);
+                idx++;
             }
+
+            // Add the tiles
+            this._dashboard.addTiles(items);
 
             // See if we are done
             if (idx >= DataSource.Items.length) {
