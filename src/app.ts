@@ -82,7 +82,7 @@ export class App {
                 ],
                 onFilter: (value: string) => {
                     // Filter the tiles
-                    this._dashboard.filterMulti(3, value);
+                    this._dashboard.filterMulti(3, [value]);
                 }
             });
         }
@@ -165,28 +165,28 @@ export class App {
                                 text: "Show All",
                                 onClick: (item, ev) => {
                                     // Clear the filters
-                                    this._dashboard.clearFilter(3, "");
+                                    this._dashboard.filterMulti(3, [""]);
                                 }
                             },
                             {
                                 text: "Approved",
                                 onClick: (item, ev) => {
                                     // Set the filter
-                                    this._dashboard.filterMulti(3, item.text);
+                                    this._dashboard.filterMulti(3, [item.text]);
                                 }
                             },
                             {
                                 text: "Needs Approval",
                                 onClick: (item, ev) => {
                                     // Set the filter
-                                    this._dashboard.filterMulti(3, item.text);
+                                    this._dashboard.filterMulti(3, [item.text]);
                                 }
                             },
                             {
                                 text: "Not Published",
                                 onClick: (item, ev) => {
                                     // Set the filter
-                                    this._dashboard.filterMulti(3, item.text);
+                                    this._dashboard.filterMulti(3, [item.text]);
                                 }
                             }
                         ]
