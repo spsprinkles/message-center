@@ -289,7 +289,7 @@ export class App {
 
         // Add the tiles in batches of 100
         let idx = 0;
-        let loopId = setTimeout(() => {
+        let loopId = setInterval(() => {
             let items = [];
             for (let i = 0; i < 100 && idx < DataSource.Items.length; i++) {
                 // Add the item to the array and increment the index
@@ -302,7 +302,7 @@ export class App {
 
             // See if we are done
             if (idx >= DataSource.Items.length) {
-                clearTimeout(loopId);
+                clearInterval(loopId);
             }
         }, 50);
     }
