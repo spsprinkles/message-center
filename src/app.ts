@@ -292,10 +292,10 @@ export class App {
             let idx = 0;
             while (idx < DataSource.Items.length) {
                 let items = [];
-                for (let i = idx; i < idx + 100 && i < DataSource.Items.length; i++) {
-                    // Increment the index and add the item to the array
+                for (let i = 0; i < 100 && idx < DataSource.Items.length; i++) {
+                    // Add the item to the array and increment the index
+                    items.push(DataSource.Items[idx+i]);
                     idx++;
-                    items.push(DataSource.Items[i]);
                 }
 
                 // Add the tiles
