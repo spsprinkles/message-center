@@ -222,7 +222,6 @@ export class App {
             tiles: {
                 items: DataSource.Items,
                 colSize: Strings.TileColumnSize,
-                paginationLimit: Strings.TilePageSize,
                 filterFields: ["Category", "ServicesAsString", "Severity", "State", "TagsAsString"],
                 titleFields: ["MessageId", "RoadMapId"],
                 titleTemplate: `
