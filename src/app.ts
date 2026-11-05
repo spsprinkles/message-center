@@ -1,4 +1,4 @@
-import { CanvasForm, Dashboard, LoadingDialog, Modal } from "dattatable";
+import { CanvasForm, Dashboard, LoadingDialog, Modal, IFilterItem } from "dattatable";
 import { Components, CustomIcons, CustomIconTypes } from "gd-sprest-bs";
 import { clipboard } from "gd-sprest-bs/build/icons/svgs/clipboard";
 import { funnel } from "gd-sprest-bs/build/icons/svgs/funnel";
@@ -9,21 +9,11 @@ import { InstallationModal } from "./install";
 import { Security } from "./security";
 import Strings from "./strings";
 
-// Items to view
-enum ItemsToShow {
-    ShowAll = 0,
-    Approved = 1,
-    NeedsApproval = 2,
-    NotPublished = 3
-}
-
-
 /**
  * Main Application
  */
 export class App {
     private _dashboard: Dashboard = null;
-    private _currentView: number = ItemsToShow.ShowAll;
     private _elNavigation: HTMLElement = null;
 
     // Constructor
@@ -39,36 +29,72 @@ export class App {
         }
     }
 
-    // Refreshes the dashboard
-    private refresh(view: ItemsToShow) {
-        // Set the current view
-        this._currentView = view;
-
-        // See what items to show
-        switch (view) {
-            case ItemsToShow.Approved:
-                // Show the approved items
-                this._dashboard.refresh(DataSource.ApprovedItems);
-                break;
-            case ItemsToShow.NotPublished:
-                // Show the items that have been reviewed
-                this._dashboard.refresh(DataSource.NotPublishedItems);
-                break;
-            case ItemsToShow.NeedsApproval:
-                // Show the items that need to be reviewed
-                this._dashboard.refresh(DataSource.NeedsApprovalItems);
-                break;
-            default:
-                // See if this is an admin
-                if (Security.IsAdmin) {
-                    // Show all the items
-                    this._dashboard.refresh(DataSource.List.Items);
-                } else {
-                    // Show only the approved items
-                    this._dashboard.refresh(DataSource.ApprovedItems);
+    // Gets the filters for the dashboard
+    private getFilters() {
+        let filters: IFilterItem[] = [
+            {
+                header: "By Category",
+                items: DataSource.CategoryFilters,
+                multi: true,
+                onFilter: (values: string[]) => {
+                    // Filter the tiles
+                    this._dashboard.filterTiles(values);
                 }
-                break;
+            },
+            {
+                header: "By Services",
+                items: DataSource.ServicesFilters,
+                multi: true,
+                onFilter: (values: string[]) => {
+                    // Filter the tiles
+                    this._dashboard.filterTiles(values);
+                }
+            },
+            {
+                header: "By Severity",
+                items: DataSource.SeverityFilters,
+                multi: true,
+                onFilter: (values: string[]) => {
+                    // Filter the tiles
+                    this._dashboard.filterTiles(values);
+                }
+            },
+            {
+                header: "By Tags",
+                items: DataSource.TagsFilters,
+                multi: true,
+                onFilter: (values: string[]) => {
+                    // Filter the tiles
+                    this._dashboard.filterTiles(values);
+                }
+            }
+        ];
+
+        // See if this is an admin
+        if (Security.IsAdmin) {
+            // Add a filter options
+            filters.push({
+                header: "By Status",
+                items: [
+                    { label: "Approved", type: Components.CheckboxGroupTypes.Switch },
+                    { label: "Needs Approval", type: Components.CheckboxGroupTypes.Switch },
+                    { label: "Not Published", type: Components.CheckboxGroupTypes.Switch }
+                ],
+                onFilter: (value: string) => {
+                    // Filter the tiles
+                    this._dashboard.filterTiles(value);
+                }
+            });
         }
+
+        // Return the filters
+        return filters;
+    }
+
+    // Refreshes the dashboard
+    private refresh() {
+        // Refresh the dashboard
+        this._dashboard.refresh(DataSource.Items);
     }
 
     // Renders the dashboard
@@ -79,44 +105,7 @@ export class App {
             hideHeader: true,
             useModal: true,
             filters: {
-                items: [
-                    {
-                        header: "By Category",
-                        items: DataSource.CategoryFilters,
-                        multi: true,
-                        onFilter: (values: string[]) => {
-                            // Filter the tiles
-                            this._dashboard.filterTiles(values);
-                        }
-                    },
-                    {
-                        header: "By Services",
-                        items: DataSource.ServicesFilters,
-                        multi: true,
-                        onFilter: (values: string[]) => {
-                            // Filter the tiles
-                            this._dashboard.filterTiles(values);
-                        }
-                    },
-                    {
-                        header: "By Severity",
-                        items: DataSource.SeverityFilters,
-                        multi: true,
-                        onFilter: (values: string[]) => {
-                            // Filter the tiles
-                            this._dashboard.filterTiles(values);
-                        }
-                    },
-                    {
-                        header: "By Tags",
-                        items: DataSource.TagsFilters,
-                        multi: true,
-                        onFilter: (values: string[]) => {
-                            // Filter the tiles
-                            this._dashboard.filterTiles(values);
-                        }
-                    }
-                ]
+                items: this.getFilters()
             },
             navigation: {
                 title: Strings.ProjectName,
@@ -175,29 +164,29 @@ export class App {
                             {
                                 text: "Show All",
                                 onClick: (item, ev) => {
-                                    // Refresh the items
-                                    this.refresh(ItemsToShow.ShowAll);
+                                    // Clear the filters
+                                    this._dashboard.clearFilter();
                                 }
                             },
                             {
                                 text: "Approved",
                                 onClick: (item, ev) => {
-                                    // Refresh the items
-                                    this.refresh(ItemsToShow.Approved);
+                                    // Set the filter
+                                    this._dashboard.filterTiles(item.text);
                                 }
                             },
                             {
                                 text: "Needs Approval",
                                 onClick: (item, ev) => {
-                                    // Refresh the items
-                                    this.refresh(ItemsToShow.NeedsApproval);
+                                    // Set the filter
+                                    this._dashboard.filterTiles(item.text);
                                 }
                             },
                             {
                                 text: "Not Published",
                                 onClick: (item, ev) => {
-                                    // Refresh the items
-                                    this.refresh(ItemsToShow.NotPublished);
+                                    // Set the filter
+                                    this._dashboard.filterTiles(item.text);
                                 }
                             }
                         ]
@@ -231,10 +220,10 @@ export class App {
                 ]
             },
             tiles: {
-                items: Security.IsAdmin ? DataSource.List.Items : DataSource.ApprovedItems,
+                items: DataSource.Items,
                 colSize: Strings.TileColumnSize,
                 paginationLimit: Strings.TilePageSize,
-                filterFields: ["Category", "Services", "Severity", "Tags"],
+                filterFields: ["Category", "Services", "Severity", "State", "Tags"],
                 titleFields: ["MessageId", "RoadMapId"],
                 titleTemplate: `
                     <div class="d-flex justify-content-between align-items-center">
@@ -471,7 +460,7 @@ export class App {
                                                 // Refresh the data source
                                                 DataSource.refresh().then(() => {
                                                     // Refresh the app
-                                                    this.refresh(this._currentView);
+                                                    this.refresh();
 
                                                     // Close the loading dialog
                                                     LoadingDialog.hide();
@@ -486,7 +475,7 @@ export class App {
                                                 // Refresh the data source
                                                 DataSource.refresh().then(() => {
                                                     // Refresh the app
-                                                    this.refresh(this._currentView);
+                                                    this.refresh();
 
                                                     // Close the loading dialog
                                                     LoadingDialog.hide();
