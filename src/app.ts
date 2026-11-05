@@ -275,14 +275,6 @@ export class App {
                     // Render the link button
                     this.renderLinkButton(el, item);
                 },
-                onColumnRendered: (el) => {
-                    // Add spacing for the top of the card
-                    el.classList.add("mt-2");
-                },
-                onCardRendered: (el) => {
-                    // Add the class names for making the heights match
-                    el.classList.add("h-100");
-                },
                 onRendering: (props) => {
                     // Defer the rendering
                     props.deferRender = true;
