@@ -220,7 +220,7 @@ export class App {
                 ]
             },
             tiles: {
-                items: [],
+                items: DataSource.Items,
                 colSize: Strings.TileColumnSize,
                 paginationLimit: Strings.TilePageSize,
                 filterFields: ["Category", "ServicesAsString", "Severity", "State", "TagsAsString"],
@@ -283,28 +283,14 @@ export class App {
                 onCardRendered: (el) => {
                     // Add the class names for making the heights match
                     el.classList.add("h-100");
+                },
+                onRendering: (props) => {
+                    // Defer the rendering
+                    props.deferRender = true;
+                    return props;
                 }
             }
         });
-
-        // Add the tiles in batches of 100
-        let idx = 0;
-        let loopId = setInterval(() => {
-            let items = [];
-            for (let i = 0; i < 100 && idx < DataSource.Items.length; i++) {
-                // Add the item to the array and increment the index
-                items.push(DataSource.Items[idx + i]);
-                idx++;
-            }
-
-            // Add the tiles
-            this._dashboard.addTiles(items);
-
-            // See if we are done
-            if (idx >= DataSource.Items.length) {
-                clearInterval(loopId);
-            }
-        }, 50);
     }
 
     // Renders the details button
