@@ -18,15 +18,15 @@ export class App {
 
     // Constructor
     constructor(el: HTMLElement, itemId?: number) {
-        // Render the dashboard
-        this.render(el);
-
         // See if we are displaying an item
         let item = itemId > 0 ? DataSource.List.getItem(itemId) : null;
         if (item) {
             // Show the item
             this.showMoreInfo(item);
         }
+
+        // Render the dashboard
+        this.render(el);
     }
 
     // Gets the filters for the dashboard
@@ -705,6 +705,5 @@ export class App {
 
         // Show the form
         CanvasForm.show();
-
     }
 }
