@@ -20,10 +20,13 @@ export interface IListItem extends Types.SP.ListItem {
     PublishedDate: string;
     RoadMapId: string;
     Services: { results: string[]; }
+    ServicesAsString: string;
     Severity: string;
+    State: "Approved" | "Needs Approval" | "Not Published" | "";
     Status: string;
     Summary: string;
     Tags: { results: string[]; }
+    TagsAsString: string;
 }
 
 /**
@@ -79,31 +82,49 @@ export class DataSource {
     static init(): PromiseLike<any> {
         // Return a promise
         return new Promise((resolve, reject) => {
-            return Promise.all([
-                // Load the security
-                Security.init(),
-
+            Promise.all([
                 // Load the data
-                this.load()
+                DataSource.load(),
+
+                // Load the security
+                Security.init()
             ]).then(resolve, reject);
         });
     }
 
     // Loads the list data
-    private static _items: { [key: string]: IListItem[] } = null;
-    static get ApprovedItems(): IListItem[] { return this._items.Approved; }
-    static get NeedsApprovalItems(): IListItem[] { return this._items.NeedsApproval; }
-    static get NotPublishedItems(): IListItem[] { return this._items.NotPublished; }
+    private static _items: IListItem[] = null;
+    static get Items(): IListItem[] { return this._items; }
     private static _list: List<IListItem>;
     static get List(): List<IListItem> { return this._list; }
-    static load(): PromiseLike<void> {
+    static load(onItemsLoaded?: (items: IListItem[]) => void): PromiseLike<void> {
         // Return a promise
         return new Promise((resolve, reject) => {
             // Clear the items
-            this._items = {
-                Approved: [],
-                NeedsApproval: [],
-                NotPublished: []
+            this._items = [];
+
+            // The items to send to the event
+            let items: IListItem[] = [];
+
+            // Adds the item to the array
+            let loopId = null;
+            let addItem = (item: IListItem) => {
+                // Append the item
+                items.push(item);
+                this._items.push(item);
+
+                // See if there is a loop
+                if (loopId) { return; }
+
+                // Set the loop id and wait 100 ms
+                loopId = setTimeout(() => {
+                    // Call the event
+                    onItemsLoaded ? onItemsLoaded(items) : null;
+
+                    // Clear the items and loop id
+                    items = [];
+                    loopId = null;
+                }, 100);
             }
 
             // Initialize the list
@@ -131,17 +152,33 @@ export class DataSource {
                     item.Category = convertCAML(item.Category);
                     item.Severity = convertCAML(item.Severity);
 
+                    // Set the string values
+                    item.ServicesAsString = item.Services?.results?.join("|") || "";
+                    item.TagsAsString = item.Tags?.results?.join("|") || "";
+
                     // See if this item is approved
                     if (item.IsApproved) {
-                        this._items.Approved.push(item);
+                        // Set the state
+                        item.State = "Approved";
                     }
                     // Else, see if there is a status set
                     else if (item.Status) {
-                        this._items.NotPublished.push(item);
+                        item.State = "Not Published";
                     }
                     // Else, this item hasn't been reviewed
                     else {
-                        this._items.NeedsApproval.push(item);
+                        item.State = "Needs Approval";
+                    }
+
+                    // Add the item if the user is an admin
+                    if (Security.IsAdmin) {
+                        // Append the item
+                        addItem(item);
+                    }
+                    // Else, only show approved items
+                    else if (item.State != "Approved") {
+                        // Append the item
+                        addItem(item);
                     }
                 }
             });
@@ -223,11 +260,7 @@ export class DataSource {
         // Return a promise
         return new Promise((resolve, reject) => {
             // Clear the items
-            this._items = {
-                Approved: [],
-                NeedsApproval: [],
-                NotPublished: []
-            }
+            this._items = [];
 
             // Refresh the data
             DataSource.List.refresh().then(resolve, reject);
