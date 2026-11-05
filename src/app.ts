@@ -38,7 +38,7 @@ export class App {
                 multi: true,
                 onFilter: (values: string[]) => {
                     // Filter the tiles
-                    this._dashboard.filterTiles(values);
+                    this._dashboard.filterTiles(0, values);
                 }
             },
             {
@@ -47,7 +47,7 @@ export class App {
                 multi: true,
                 onFilter: (values: string[]) => {
                     // Filter the tiles
-                    this._dashboard.filterTiles(values);
+                    this._dashboard.filterTiles(1, values);
                 }
             },
             {
@@ -56,7 +56,7 @@ export class App {
                 multi: true,
                 onFilter: (values: string[]) => {
                     // Filter the tiles
-                    this._dashboard.filterTiles(values);
+                    this._dashboard.filterTiles(2, values);
                 }
             },
             {
@@ -65,7 +65,7 @@ export class App {
                 multi: true,
                 onFilter: (values: string[]) => {
                     // Filter the tiles
-                    this._dashboard.filterTiles(values);
+                    this._dashboard.filterTiles(4, values);
                 }
             }
         ];
@@ -165,28 +165,28 @@ export class App {
                                 text: "Show All",
                                 onClick: (item, ev) => {
                                     // Clear the filters
-                                    this._dashboard.clearFilter();
+                                    this._dashboard.clearFilter(3, "");
                                 }
                             },
                             {
                                 text: "Approved",
                                 onClick: (item, ev) => {
                                     // Set the filter
-                                    this._dashboard.filterTiles(item.text);
+                                    this._dashboard.filterTiles(3, item.text);
                                 }
                             },
                             {
                                 text: "Needs Approval",
                                 onClick: (item, ev) => {
                                     // Set the filter
-                                    this._dashboard.filterTiles(item.text);
+                                    this._dashboard.filterTiles(3, item.text);
                                 }
                             },
                             {
                                 text: "Not Published",
                                 onClick: (item, ev) => {
                                     // Set the filter
-                                    this._dashboard.filterTiles(item.text);
+                                    this._dashboard.filterTiles(3, item.text);
                                 }
                             }
                         ]
