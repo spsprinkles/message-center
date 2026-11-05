@@ -223,7 +223,7 @@ export class App {
                 items: DataSource.Items,
                 colSize: Strings.TileColumnSize,
                 paginationLimit: Strings.TilePageSize,
-                filterFields: ["Category", "Services", "Severity", "State", "Tags"],
+                filterFields: ["Category", "ServicesAsString", "Severity", "State", "TagsAsString"],
                 titleFields: ["MessageId", "RoadMapId"],
                 titleTemplate: `
                     <div class="d-flex justify-content-between align-items-center">

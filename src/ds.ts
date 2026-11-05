@@ -20,11 +20,13 @@ export interface IListItem extends Types.SP.ListItem {
     PublishedDate: string;
     RoadMapId: string;
     Services: { results: string[]; }
+    ServicesAsString: string;
     Severity: string;
     State: "Approved" | "Needs Approval" | "Not Published" | "";
     Status: string;
     Summary: string;
     Tags: { results: string[]; }
+    TagsAsString: string;
 }
 
 /**
@@ -149,6 +151,10 @@ export class DataSource {
                     // Convert the category & severity
                     item.Category = convertCAML(item.Category);
                     item.Severity = convertCAML(item.Severity);
+
+                    // Set the string values
+                    item.ServicesAsString = item.Services?.results?.join("|") || "";
+                    item.TagsAsString = item.Tags?.results?.join("|") || "";
 
                     // See if this item is approved
                     if (item.IsApproved) {
