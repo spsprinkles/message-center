@@ -220,7 +220,7 @@ export class App {
                 ]
             },
             tiles: {
-                items: DataSource.Items,
+                items: [],
                 colSize: Strings.TileColumnSize,
                 paginationLimit: Strings.TilePageSize,
                 filterFields: ["Category", "ServicesAsString", "Severity", "State", "TagsAsString"],
@@ -286,6 +286,27 @@ export class App {
                 }
             }
         });
+
+        // Add the tiles in batches of 100
+        let loopId = setTimeout(() => {
+            let idx = 0;
+            while (idx < DataSource.Items.length) {
+                let items = [];
+                for (let i = idx; i < idx + 100 && i < DataSource.Items.length; i++) {
+                    // Increment the index and add the item to the array
+                    idx++;
+                    items.push(DataSource.Items[i]);
+                }
+
+                // Add the tiles
+                this._dashboard.addTiles(items);
+            }
+
+            // See if we are done
+            if (idx >= DataSource.Items.length) {
+                clearTimeout(loopId);
+            }
+        }, 50);
     }
 
     // Renders the details button
