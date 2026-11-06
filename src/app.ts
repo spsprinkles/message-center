@@ -222,7 +222,31 @@ export class App {
             tiles: {
                 items: DataSource.Items,
                 colSize: Strings.TileColumnSize,
-                filterFields: ["Category", "ServicesAsString", "Severity", "State", "TagsAsString"],
+                columnControls: [{ order: true }, { searchList: true }],
+                columns: [
+                    {
+                        name: "Category",
+                        title: "Category",
+                    },
+                    {
+                        name: "ServicesAsString",
+                        title: "Service",
+                        visible: false
+                    },
+                    {
+                        name: "Severity",
+                        title: "Severity",
+                    },
+                    {
+                        name: "State",
+                        title: "State",
+                    },
+                    {
+                        name: "TagsAsString",
+                        title: "Tags",
+                        visible: false
+                    }
+                ],
                 titleFields: ["MessageId", "RoadMapId"],
                 titleTemplate: `
                     <div class="d-flex justify-content-between align-items-center">
