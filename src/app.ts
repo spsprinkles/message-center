@@ -29,68 +29,6 @@ export class App {
         this.render(el);
     }
 
-    // Gets the filters for the dashboard
-    private getFilters() {
-        let filters: IFilterItem[] = [
-            {
-                header: "By Category",
-                items: DataSource.CategoryFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(0, values);
-                }
-            },
-            {
-                header: "By Services",
-                items: DataSource.ServicesFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(1, values);
-                }
-            },
-            {
-                header: "By Severity",
-                items: DataSource.SeverityFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(2, values);
-                }
-            },
-            {
-                header: "By Tags",
-                items: DataSource.TagsFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(4, values);
-                }
-            }
-        ];
-
-        // See if this is an admin
-        if (Security.IsAdmin) {
-            // Add a filter options
-            filters.push({
-                header: "By Status",
-                items: [
-                    { label: "Approved", type: Components.CheckboxGroupTypes.Switch },
-                    { label: "Needs Approval", type: Components.CheckboxGroupTypes.Switch },
-                    { label: "Not Published", type: Components.CheckboxGroupTypes.Switch }
-                ],
-                onFilter: (value: string) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(3, [value]);
-                }
-            });
-        }
-
-        // Return the filters
-        return filters;
-    }
-
     // Refreshes the dashboard
     private refresh() {
         // Refresh the dashboard
@@ -104,9 +42,6 @@ export class App {
             el,
             hideHeader: true,
             useModal: true,
-            filters: {
-                items: this.getFilters()
-            },
             navigation: {
                 title: Strings.ProjectName,
                 itemsEnd: Security.IsAdmin ? [
@@ -150,43 +85,6 @@ export class App {
                                 onClick: () => {
                                     // Show the settings in a new tab
                                     window.open(Strings.SourceUrl + "/_layouts/15/people.aspx?MembershipGroupId=" + Security.VisitorGroup.Id);
-                                }
-                            }
-                        ]
-                    },
-                    {
-                        isButton: true,
-                        className: "btn-icon btn-outline-light me-2 p-2 py-1",
-                        iconSize: 22,
-                        iconType: funnel,
-                        text: "View Items",
-                        items: [
-                            {
-                                text: "Show All",
-                                onClick: (item, ev) => {
-                                    // Clear the filters
-                                    this._dashboard.filterMulti(3, [""]);
-                                }
-                            },
-                            {
-                                text: "Approved",
-                                onClick: (item, ev) => {
-                                    // Set the filter
-                                    this._dashboard.filterMulti(3, [item.text]);
-                                }
-                            },
-                            {
-                                text: "Needs Approval",
-                                onClick: (item, ev) => {
-                                    // Set the filter
-                                    this._dashboard.filterMulti(3, [item.text]);
-                                }
-                            },
-                            {
-                                text: "Not Published",
-                                onClick: (item, ev) => {
-                                    // Set the filter
-                                    this._dashboard.filterMulti(3, [item.text]);
                                 }
                             }
                         ]
@@ -239,6 +137,7 @@ export class App {
                     {
                         name: "State",
                         title: "State",
+                        visible: Security.IsAdmin
                     },
                     {
                         name: "TagsAsString",

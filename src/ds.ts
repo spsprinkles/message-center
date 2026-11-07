@@ -92,6 +92,12 @@ export class DataSource {
         });
     }
 
+    // Filters
+    private static _services: string[] = null;
+    private static _tags: string[] = null;
+    static get Services(): string[] { return this._services; }
+    static get Tags(): string[] { return this._tags; }
+
     // Loads the list data
     private static _items: IListItem[] = null;
     static get Items(): IListItem[] { return this._items; }
@@ -105,6 +111,10 @@ export class DataSource {
 
             // The items to send to the event
             let items: IListItem[] = [];
+
+            // Set the filters
+            let services = {};
+            let tags = {};
 
             // Adds the item to the array
             let loopId = null;
@@ -138,8 +148,9 @@ export class DataSource {
                 },
                 onInitError: reject,
                 onInitialized: () => {
-                    // Load the filters
-                    this.loadFilters();
+                    // Set the services and tags
+                    this._services = Object.keys(services).sort();
+                    this._tags = Object.keys(tags).sort();
 
                     // Load the status items
                     this.loadStatus();
@@ -155,6 +166,10 @@ export class DataSource {
                     // Set the string values
                     item.ServicesAsString = item.Services?.results?.join("|") || "";
                     item.TagsAsString = item.Tags?.results?.join("|") || "";
+
+                    // Parse the services and tags
+                    (item.Services?.results || []).forEach(service => { services[service] = true; });
+                    (item.Tags?.results || []).forEach(tag => { tags[tag] = true; });
 
                     // See if this item is approved
                     if (item.IsApproved) {
@@ -183,86 +198,6 @@ export class DataSource {
                 }
             });
         });
-    }
-
-    // Filters
-    private static _filters: { [key: string]: Components.ICheckboxGroupItem[] } = null;
-    static Services:string[] = null;
-    static Tags:string[] = null;
-    static get CategoryFilters(): Components.ICheckboxGroupItem[] { return this._filters.category; }
-    static get SeverityFilters(): Components.ICheckboxGroupItem[] { return this._filters.severity; }
-    static get ServicesFilters(): Components.ICheckboxGroupItem[] { return this._filters.services; }
-    static get TagsFilters(): Components.ICheckboxGroupItem[] { return this._filters.tags; }
-    static loadFilters() {
-        let filters = {
-            category: {},
-            services: {},
-            severity: {},
-            tags: {}
-        }
-
-        // Clear the filters
-        this._filters = {
-            category: [],
-            services: [],
-            severity: [],
-            tags: []
-        }
-
-        // Clear the services and tags
-        this.Services = [];
-        this.Tags = [];
-
-        // Parse the items
-        for (let i = 0; i < this.List.Items.length; i++) {
-            let item = this.List.Items[i];
-
-            // Set the filter values
-            item.Category ? filters.category[item.Category] = true : null;
-            item.Severity ? filters.severity[item.Severity] = true : null;
-
-            // Parse the services
-            let services = item.Services?.results || [];
-            for (let i = 0; i < services.length; i++) {
-                filters.services[services[i]] = true;
-            }
-
-            // Parse the tags
-            let tags = item.Tags?.results || [];
-            for (let i = 0; i < tags.length; i++) {
-                filters.tags[tags[i]] = true;
-            }
-        }
-
-        // Set the filters
-        let setFilters = (key: string) => {
-            // Parse the filter values
-            for (let filterValue in filters[key]) {
-                // Add the filter value
-                this._filters[key].push({
-                    data: filterValue,
-                    label: filterValue,
-                    type: Components.CheckboxGroupTypes.Switch
-                });
-            }
-
-            // Sorty the filters
-            this._filters[key] = this._filters[key].sort((a, b) => {
-                if (a.label < b.label) { return -1; }
-                if (a.label > b.label) { return 1; }
-                return 0;
-            });
-        }
-
-        // Set the filters
-        setFilters("category");
-        setFilters("services");
-        setFilters("severity");
-        setFilters("tags");
-
-        // Set the services and tags
-        this.Services = Object.keys(filters.services).sort();
-        this.Tags = Object.keys(filters.tags).sort();
     }
 
     // Refreshes the list data
