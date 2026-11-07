@@ -230,8 +230,7 @@ export class App {
                     },
                     {
                         name: "ServicesAsString",
-                        title: "Service",
-                        visible: false
+                        title: "Service"
                     },
                     {
                         name: "Severity",
@@ -243,28 +242,7 @@ export class App {
                     },
                     {
                         name: "TagsAsString",
-                        title: "Tags",
-                        visible: false
-                    },
-                    {
-                        name: "Services",
-                        columnControl: [
-                            "order",
-                            {
-                                extend: "searchList",
-                                options: DataSource.Services
-                            }
-                        ]
-                    },
-                    {
-                        name: "Tags",
-                        columnControl: [
-                            "order",
-                            {
-                                extend: "searchList",
-                                options: DataSource.Tags
-                            }
-                        ]
+                        title: "Tags"
                     },
                     {
                         name: "Title",
@@ -327,6 +305,11 @@ export class App {
                     // Defer the rendering
                     props.deferRender = true;
                     return props;
+                },
+                onRendered: () => {
+                    // Update the services and tags filter options
+                    this._dashboard.Datatable.datatable.column("ServicesAsString:name").searchList(DataSource.Services);
+                    this._dashboard.Datatable.datatable.column("TagsAsString:name").searchList(DataSource.Tags);
                 }
             }
         });
