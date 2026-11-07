@@ -247,10 +247,22 @@ export class App {
                         visible: false
                     },
                     {
-                        name: "Services"
+                        name: "Services",
+                        render: (data, type) => {
+                            if(type === "display") {
+                                return data.join(", ");
+                            }
+                            return data;
+                        }
                     },
                     {
-                        name: "Tags"
+                        name: "Tags",
+                        render: (data, type) => {
+                            if(type === "display") {
+                                return data.join(", ");
+                            }
+                            return data;
+                        }
                     },
                     {
                         name: "Title",
