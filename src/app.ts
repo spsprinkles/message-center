@@ -42,6 +42,7 @@ export class App {
             hideHeader: true,
             useModal: true,
             navigation: {
+                showFilter: false,
                 title: Strings.ProjectName,
                 itemsEnd: Security.IsAdmin ? [
                     {
