@@ -248,17 +248,23 @@ export class App {
                     },
                     {
                         name: "Services",
-                        columnControl: {
-                            extend: "searchList",
-                            options: DataSource.Services
-                        }
+                        columnControl: [
+                            "order",
+                            {
+                                extend: "searchList",
+                                options: DataSource.Services
+                            }
+                        ]
                     },
                     {
                         name: "Tags",
-                        columnControl: {
-                            extend: "searchList",
-                            options: DataSource.Tags
-                        }
+                        columnControl: [
+                            "order",
+                            {
+                                extend: "searchList",
+                                options: DataSource.Tags
+                            }
+                        ]
                     },
                     {
                         name: "Title",
