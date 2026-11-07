@@ -308,8 +308,8 @@ export class App {
                 },
                 onRendered: () => {
                     // Update the services and tags filter options
-                    this._dashboard.Datatable.datatable.column("ServicesAsString:name").searchList(DataSource.Services);
-                    this._dashboard.Datatable.datatable.column("TagsAsString:name").searchList(DataSource.Tags);
+                    this._dashboard.Tiles.datatable.column("ServicesAsString:name").searchList(DataSource.Services);
+                    this._dashboard.Tiles.datatable.column("TagsAsString:name").searchList(DataSource.Tags);
                 }
             }
         });
