@@ -14,7 +14,6 @@ import Strings from "./strings";
  */
 export class App {
     private _dashboard: Dashboard = null;
-    private _elNavigation: HTMLElement = null;
 
     // Constructor
     constructor(el: HTMLElement, itemId?: number) {
@@ -104,10 +103,6 @@ export class App {
                     navIcon.appendChild(clipboard(32, 32));
                     navIcon.appendChild(navText);
                     props.brand = navIcon;
-                },
-                onRendered: el => {
-                    // Save a reference to the navigation
-                    this._elNavigation = el;
                 }
             },
             footer: {
