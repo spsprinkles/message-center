@@ -14,7 +14,6 @@ import Strings from "./strings";
  */
 export class App {
     private _dashboard: Dashboard = null;
-    private _elNavigation: HTMLElement = null;
 
     // Constructor
     constructor(el: HTMLElement, itemId?: number) {
@@ -27,68 +26,6 @@ export class App {
 
         // Render the dashboard
         this.render(el);
-    }
-
-    // Gets the filters for the dashboard
-    private getFilters() {
-        let filters: IFilterItem[] = [
-            {
-                header: "By Category",
-                items: DataSource.CategoryFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(0, values);
-                }
-            },
-            {
-                header: "By Services",
-                items: DataSource.ServicesFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(1, values);
-                }
-            },
-            {
-                header: "By Severity",
-                items: DataSource.SeverityFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(2, values);
-                }
-            },
-            {
-                header: "By Tags",
-                items: DataSource.TagsFilters,
-                multi: true,
-                onFilter: (values: string[]) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(4, values);
-                }
-            }
-        ];
-
-        // See if this is an admin
-        if (Security.IsAdmin) {
-            // Add a filter options
-            filters.push({
-                header: "By Status",
-                items: [
-                    { label: "Approved", type: Components.CheckboxGroupTypes.Switch },
-                    { label: "Needs Approval", type: Components.CheckboxGroupTypes.Switch },
-                    { label: "Not Published", type: Components.CheckboxGroupTypes.Switch }
-                ],
-                onFilter: (value: string) => {
-                    // Filter the tiles
-                    this._dashboard.filterMulti(3, [value]);
-                }
-            });
-        }
-
-        // Return the filters
-        return filters;
     }
 
     // Refreshes the dashboard
@@ -104,10 +41,8 @@ export class App {
             el,
             hideHeader: true,
             useModal: true,
-            filters: {
-                items: this.getFilters()
-            },
             navigation: {
+                showFilter: false,
                 title: Strings.ProjectName,
                 itemsEnd: Security.IsAdmin ? [
                     {
@@ -153,43 +88,6 @@ export class App {
                                 }
                             }
                         ]
-                    },
-                    {
-                        isButton: true,
-                        className: "btn-icon btn-outline-light me-2 p-2 py-1",
-                        iconSize: 22,
-                        iconType: funnel,
-                        text: "View Items",
-                        items: [
-                            {
-                                text: "Show All",
-                                onClick: (item, ev) => {
-                                    // Clear the filters
-                                    this._dashboard.filterMulti(3, [""]);
-                                }
-                            },
-                            {
-                                text: "Approved",
-                                onClick: (item, ev) => {
-                                    // Set the filter
-                                    this._dashboard.filterMulti(3, [item.text]);
-                                }
-                            },
-                            {
-                                text: "Needs Approval",
-                                onClick: (item, ev) => {
-                                    // Set the filter
-                                    this._dashboard.filterMulti(3, [item.text]);
-                                }
-                            },
-                            {
-                                text: "Not Published",
-                                onClick: (item, ev) => {
-                                    // Set the filter
-                                    this._dashboard.filterMulti(3, [item.text]);
-                                }
-                            }
-                        ]
                     }
                 ] : null,
                 onRendering: props => {
@@ -206,10 +104,6 @@ export class App {
                     navIcon.appendChild(clipboard(32, 32));
                     navIcon.appendChild(navText);
                     props.brand = navIcon;
-                },
-                onRendered: el => {
-                    // Save a reference to the navigation
-                    this._elNavigation = el;
                 }
             },
             footer: {
@@ -222,7 +116,34 @@ export class App {
             tiles: {
                 items: DataSource.Items,
                 colSize: Strings.TileColumnSize,
-                filterFields: ["Category", "ServicesAsString", "Severity", "State", "TagsAsString"],
+                columnControls: [{ order: true }, { searchList: true }],
+                columns: [
+                    {
+                        name: "Category",
+                        title: "Category",
+                    },
+                    {
+                        name: "ServicesAsString",
+                        title: "Service"
+                    },
+                    {
+                        name: "Severity",
+                        title: "Severity",
+                    },
+                    {
+                        name: "State",
+                        title: "State",
+                        visible: Security.IsAdmin
+                    },
+                    {
+                        name: "TagsAsString",
+                        title: "Tags"
+                    },
+                    {
+                        name: "Title",
+                        visible: false
+                    }
+                ],
                 titleFields: ["MessageId", "RoadMapId"],
                 titleTemplate: `
                     <div class="d-flex justify-content-between align-items-center">
@@ -279,6 +200,11 @@ export class App {
                     // Defer the rendering
                     props.deferRender = true;
                     return props;
+                },
+                onRendered: () => {
+                    // Update the services and tags filter options
+                    this._dashboard.Tiles.datatable.column("ServicesAsString:name").columnControl.searchList(DataSource.Services);
+                    this._dashboard.Tiles.datatable.column("TagsAsString:name").columnControl.searchList(DataSource.Tags);
                 }
             }
         });
