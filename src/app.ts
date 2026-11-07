@@ -245,6 +245,16 @@ export class App {
                         name: "TagsAsString",
                         title: "Tags",
                         visible: false
+                    },
+                    {
+                        name: "Services"
+                    },
+                    {
+                        name: "Tags"
+                    },
+                    {
+                        name: "Title",
+                        visible: false
                     }
                 ],
                 titleFields: ["MessageId", "RoadMapId"],
