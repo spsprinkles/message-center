@@ -248,20 +248,16 @@ export class App {
                     },
                     {
                         name: "Services",
-                        render: (data, type) => {
-                            if(type === "display") {
-                                return data.join(", ");
-                            }
-                            return data;
+                        columnControl: {
+                            extend: "searchList",
+                            options: DataSource.Services
                         }
                     },
                     {
                         name: "Tags",
-                        render: (data, type) => {
-                            if(type === "display") {
-                                return data.join(", ");
-                            }
-                            return data;
+                        columnControl: {
+                            extend: "searchList",
+                            options: DataSource.Tags
                         }
                     },
                     {

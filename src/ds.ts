@@ -187,6 +187,8 @@ export class DataSource {
 
     // Filters
     private static _filters: { [key: string]: Components.ICheckboxGroupItem[] } = null;
+    static Services:string[] = null;
+    static Tags:string[] = null;
     static get CategoryFilters(): Components.ICheckboxGroupItem[] { return this._filters.category; }
     static get SeverityFilters(): Components.ICheckboxGroupItem[] { return this._filters.severity; }
     static get ServicesFilters(): Components.ICheckboxGroupItem[] { return this._filters.services; }
@@ -206,6 +208,10 @@ export class DataSource {
             severity: [],
             tags: []
         }
+
+        // Clear the services and tags
+        this.Services = [];
+        this.Tags = [];
 
         // Parse the items
         for (let i = 0; i < this.List.Items.length; i++) {
@@ -253,6 +259,10 @@ export class DataSource {
         setFilters("services");
         setFilters("severity");
         setFilters("tags");
+
+        // Set the services and tags
+        this.Services = Object.keys(filters.services).sort();
+        this.Tags = Object.keys(filters.tags).sort();
     }
 
     // Refreshes the list data
