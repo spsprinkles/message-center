@@ -144,7 +144,7 @@ export class App {
                         visible: false
                     },
                     {
-                        name: "MessageId",
+                        name: "PublishedDate",
                         order: "desc",
                         visible: false
                     }
