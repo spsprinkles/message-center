@@ -143,9 +143,8 @@ export class App {
                         visible: false
                     },
                     {
-                        name: "PublishedDateFormatted",
-                        order: "desc",
-                        visible: false
+                        name: "PublishedDate",
+                        order: "desc"
                     }
                 ],
                 titleFields: ["MessageId", "RoadMapId"],
@@ -565,6 +564,13 @@ export class App {
             type: Components.AlertTypes.Secondary
         });
 
+        // Set the published date
+        let publishedDate = "";
+        if (item.PublishedDate) {
+            // Format the date/time
+            publishedDate = moment.utc(item.PublishedDate).tz(Strings.TimeZone).format(Strings.TimeFormat);
+        }
+
         // Set the roadmap links
         let roadmapLinks = "";
         let roadmapIds = (item.RoadMapId || "").split(',');
@@ -597,7 +603,7 @@ export class App {
                     <div class="fs-6">Roadmap ID:</div>
                     <div class="mb-3">${roadmapLinks}</div>
                     <div class="fs-6">Published:</div>
-                    <div class="mb-3">${item.PublishedDateFormatted || ""}</div>
+                    <div class="mb-3">${publishedDate}</div>
                     <div class="fs-6">Tag(s):</div>
                     <div class="mb-3">${badges.join('\n')}</div>
                 </div>

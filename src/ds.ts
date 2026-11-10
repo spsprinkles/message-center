@@ -19,7 +19,7 @@ export interface IListItem extends Types.SP.ListItem {
     Notes: string;
     Platform: string;
     PublishedDate: string;
-    PublishedDateFormatted: string;
+    PublishedDateAsNumber: number;
     RoadMapId: string;
     Services: { results: string[]; }
     ServicesAsString: string;
@@ -166,7 +166,7 @@ export class DataSource {
                     item.Severity = convertCAML(item.Severity);
 
                     // Set the string values
-                    item.PublishedDateFormatted = item.PublishedDate ? moment.utc(item.PublishedDate).tz(Strings.TimeZone).format(Strings.TimeFormat) : "";
+                    item.PublishedDateAsNumber = item.PublishedDate ? (new Date(item.PublishedDate)).getTime() : 0;
                     item.ServicesAsString = item.Services?.results?.join("|") || "";
                     item.TagsAsString = item.Tags?.results?.join("|") || "";
 
