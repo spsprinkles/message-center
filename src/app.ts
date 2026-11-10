@@ -144,7 +144,8 @@ export class App {
                     },
                     {
                         name: "PublishedDate",
-                        order: "desc"
+                        order: "desc",
+                        visible: false
                     }
                 ],
                 titleFields: ["MessageId", "RoadMapId"],
