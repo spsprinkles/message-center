@@ -142,6 +142,11 @@ export class App {
                     {
                         name: "Title",
                         visible: false
+                    },
+                    {
+                        name: "MessageId",
+                        order: "desc",
+                        visible: false
                     }
                 ],
                 titleFields: ["MessageId", "RoadMapId"],
@@ -195,11 +200,6 @@ export class App {
 
                     // Render the link button
                     this.renderLinkButton(el, item);
-                },
-                onRendering: (props) => {
-                    // Defer the rendering
-                    props.deferRender = true;
-                    return props;
                 },
                 onRendered: () => {
                     // Update the services and tags filter options
