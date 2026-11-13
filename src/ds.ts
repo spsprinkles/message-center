@@ -192,7 +192,7 @@ export class DataSource {
                         addItem(item);
                     }
                     // Else, only show approved items
-                    else if (item.State != "Approved") {
+                    else if (item.State == "Approved") {
                         // Append the item
                         addItem(item);
                     }
